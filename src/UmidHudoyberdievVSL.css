@@ -11,6 +11,18 @@ html, body {
   -webkit-font-smoothing:antialiased;
 }
 
+/* amoCRM embed popup — kengaytirilgan */
+.sm-popup-amo {
+  padding: 40px 32px 32px;
+  min-width: 360px;
+  max-width: 520px;
+}
+.sm-popup-amo #amoforms_1676490 {
+  min-height: 200px;
+}
+/* amoCRM formaning o'z stillarini override qilish */
+.sm-popup-amo .amoforms__holder { box-shadow: none !important; padding: 0 !important; }
+
 /* ══════════════════════════════════
    POPUP
 ══════════════════════════════════ */
@@ -102,26 +114,28 @@ html, body {
 .sm-hero-inner {
   position:relative; z-index:2;
   width:100%; max-width:1200px; margin:0 auto;
-  display:flex; align-items:flex-end;
+  display:flex; align-items:stretch;
   height:750px;
 }
 
 /* Person – left */
 .sm-hero-person {
-  flex:0 0 45%; display:flex;
-  align-items:flex-end;
+  flex:0 0 48%; display:flex;
+  align-items:flex-end; justify-content:flex-start;
 }
 .sm-hero-person img {
-  display:block; width:100%; max-width:480px;
-  max-height:620px;
-  object-fit:contain; object-position:bottom;
+  display:block;
+  width:100%; max-width:520px;
+  height:750px;
+  object-fit:contain; object-position:bottom left;
 }
 
 /* Text – right */
 .sm-hero-text {
   flex:1; display:flex; flex-direction:column;
   align-items:center; text-align:center;
-  padding:60px 48px 120px 16px;
+  justify-content:center;
+  padding:40px 48px 100px 16px;
 }
 
 /* Instagram badge */
@@ -290,7 +304,7 @@ html, body {
   display:flex; flex-direction:column; align-items:center;
 }
 .sm-author-photo {
-  width:100%; max-width:240px;
+  width:100%; max-width:240px; max-height:260px;
   display:block; object-fit:contain;
 }
 .sm-author-cta {

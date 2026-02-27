@@ -24,126 +24,57 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   AMOCR FORM CONFIG
-───────────────────────────────────────────── */
-const AMO_FORM_ID   = "1676490";
-const AMO_FORM_HASH = "f09e3d886b18ad916f5e64433d629247";
-
-/* ─────────────────────────────────────────────
-   POPUP
+   POPUP — amoCRM embed forma
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
-  const [name,   setName]   = useState("");
-  const [phone,  setPhone]  = useState("");
-  const [status, setStatus] = useState("idle");
+  useEffect(() => {
+    if (!open) return;
 
+    // Oldingi skriptlarni tozalaymiz (qayta yuklash uchun)
+    const old1 = document.getElementById("amo_script_1");
+    const old2 = document.getElementById("amoforms_script_1676490");
+    if (old1) old1.remove();
+    if (old2) old2.remove();
+
+    // amoCRM params reset
+    if (window.amo_forms_params) delete window.amo_forms_params;
+    if (window.amo_forms_load)   delete window.amo_forms_load;
+    if (window.amo_forms_loaded) delete window.amo_forms_loaded;
+
+    // 1-script
+    const s1 = document.createElement("script");
+    s1.id   = "amo_script_1";
+    s1.text = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
+    document.body.appendChild(s1);
+
+    // 2-script (async)
+    const s2  = document.createElement("script");
+    s2.id     = "amoforms_script_1676490";
+    s2.async  = true;
+    s2.charset = "utf-8";
+    s2.src    = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?" + Date.now();
+    document.body.appendChild(s2);
+
+  }, [open]);
+
+  // ESC tugma
   useEffect(() => {
     const onKey = e => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      alert("Iltimos, ismingizni kiriting.");
-      return;
-    }
-    if (phone.trim().length < 9) {
-      alert("Iltimos, to'liq telefon raqamni kiriting (9 ta raqam).");
-      return;
-    }
-    setStatus("loading");
-    try {
-      const formData = new FormData();
-      formData.append("form[id]",            AMO_FORM_ID);
-      formData.append("form[hash]",          AMO_FORM_HASH);
-      formData.append("form[lang]",          "ru");
-      formData.append("form[origin]",        window.location.origin);
-      formData.append("form[fields][name]",  name.trim());
-      formData.append("form[fields][phone]", "+998" + phone.trim());
-
-      await fetch("https://forms.amocrm.ru/api/forms/submit", {
-        method: "POST",
-        body:   formData,
-        mode:   "no-cors",
-      });
-
-      // no-cors da response keladi lekin tekshirib bo'lmaydi
-      // Real domenida ishlaydi
-      setStatus("success");
-      setName(""); setPhone("");
-      setTimeout(() => { setStatus("idle"); onClose(); }, 2000);
-    } catch (err) {
-      console.error(err);
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 2500);
-    }
-  };
+  if (!open) return null;
 
   return (
     <div
-      className={`sm-overlay${open ? " open" : ""}`}
+      className="sm-overlay open"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="sm-popup" role="dialog" aria-modal="true">
-        <button className="sm-popup-close" onClick={onClose} aria-label="Yopish">✕</button>
-
-        {status === "success" ? (
-          <div style={{ textAlign:"center", padding:"24px 0" }}>
-            <div style={{ fontSize:52, marginBottom:14 }}>🎉</div>
-            <p style={{ fontSize:19, fontWeight:700, color:"#111" }}>
-              Muvaffaqiyatli yuborildi!
-            </p>
-            <p style={{ fontSize:14, color:"#777", marginTop:8 }}>
-              Tez orada siz bilan bog'lanamiz
-            </p>
-          </div>
-        ) : (
-          <>
-            <p className="sm-popup-title">
-              Davom etish uchun ma'lumotlaringizni kiriting
-            </p>
-
-            <label className="sm-label">Ismingiz</label>
-            <input
-              className="sm-inp"
-              type="text"
-              placeholder="To'liq ismingiz"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              disabled={status === "loading"}
-              autoFocus
-            />
-
-            <label className="sm-label">Telefon raqamingiz</label>
-            <div className="sm-phone-wrap">
-              <div className="sm-phone-code">🇺🇿 +998</div>
-              <input
-                className="sm-phone-inp"
-                type="tel"
-                placeholder="90 123 45 67"
-                value={phone}
-                onChange={e => setPhone(e.target.value.replace(/\D/g, ""))}
-                maxLength={9}
-                disabled={status === "loading"}
-              />
-            </div>
-
-            <button
-              className="sm-submit"
-              onClick={handleSubmit}
-              disabled={status === "loading"}
-            >
-              {status === "loading" ? "Yuborilmoqda..." : "RO'YXATDAN O'TISH"}
-            </button>
-
-            {status === "error" && (
-              <p style={{ color:"#e53", textAlign:"center", marginTop:10, fontSize:13 }}>
-                Xatolik yuz berdi. Qayta urinib ko'ring.
-              </p>
-            )}
-          </>
-        )}
+      <div className="sm-popup sm-popup-amo" role="dialog">
+        <button className="sm-popup-close" onClick={onClose}>✕</button>
+        {/* amoCRM forma shu div ichiga yuklanadi */}
+        <div id="amoforms_1676490" />
       </div>
     </div>
   );
