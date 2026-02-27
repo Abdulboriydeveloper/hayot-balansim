@@ -24,13 +24,9 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   POPUP — o'z custom formamiz
-   (amoCRM ga to'g'ri POST qiladi)
+   POPUP — amoCRM forma iframe orqali
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
-  const [name,   setName]   = useState("");
-  const [phone,  setPhone]  = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
   // ESC tugma
   useEffect(() => {
@@ -45,44 +41,6 @@ function Popup({ open, onClose }) {
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
-  const handleSubmit = async () => {
-    if (!name.trim()) {
-      alert("Iltimos, ismingizni kiriting.");
-      return;
-    }
-    if (phone.trim().length < 9) {
-      alert("Telefon raqam 9 ta raqam bo'lishi kerak.");
-      return;
-    }
-    setStatus("loading");
-
-    try {
-      const body = new FormData();
-      body.append("form[id]",            "1676490");
-      body.append("form[hash]",          "f09e3d886b18ad916f5e64433d629247");
-      body.append("form[lang]",          "ru");
-      body.append("form[origin]",        window.location.href);
-      body.append("form[fields][name]",  name.trim());
-      body.append("form[fields][phone]", "+998" + phone.trim());
-
-      // no-cors — amoCRM CORS ruxsat bermaydi,
-      // lekin so'rov yetib boradi va lead yaratiladi
-      await fetch("https://forms.amocrm.ru/forms/submit", {
-        method: "POST",
-        body,
-        mode: "no-cors",
-      });
-
-      setStatus("success");
-      setName("");
-      setPhone("");
-      setTimeout(() => { setStatus("idle"); onClose(); }, 2200);
-    } catch {
-      setStatus("error");
-      setTimeout(() => setStatus("idle"), 2500);
-    }
-  };
-
   if (!open) return null;
 
   return (
@@ -90,65 +48,15 @@ function Popup({ open, onClose }) {
       className="sm-overlay open"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="sm-popup" role="dialog" aria-modal="true">
+      <div className="sm-popup sm-popup-iframe" role="dialog" aria-modal="true">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
-
-        {status === "success" ? (
-          <div style={{ textAlign:"center", padding:"28px 0" }}>
-            <div style={{ fontSize:56, marginBottom:16 }}>🎉</div>
-            <p style={{ fontSize:20, fontWeight:800, color:"#111" }}>
-              Muvaffaqiyatli yuborildi!
-            </p>
-            <p style={{ fontSize:14, color:"#888", marginTop:10 }}>
-              Tez orada siz bilan bog'lanamiz
-            </p>
-          </div>
-        ) : (
-          <>
-            <p className="sm-popup-title">
-              Davom etish uchun ma'lumotlaringizni kiriting
-            </p>
-
-            <label className="sm-label">Ismingiz</label>
-            <input
-              className="sm-inp"
-              type="text"
-              placeholder="To'liq ismingiz"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              disabled={status === "loading"}
-              autoFocus
-            />
-
-            <label className="sm-label">Telefon raqamingiz</label>
-            <div className="sm-phone-wrap">
-              <div className="sm-phone-code">🇺🇿 +998</div>
-              <input
-                className="sm-phone-inp"
-                type="tel"
-                placeholder="90 123 45 67"
-                value={phone}
-                onChange={e => setPhone(e.target.value.replace(/\D/g, ""))}
-                maxLength={9}
-                disabled={status === "loading"}
-              />
-            </div>
-
-            <button
-              className="sm-submit"
-              onClick={handleSubmit}
-              disabled={status === "loading"}
-            >
-              {status === "loading" ? "Yuborilmoqda..." : "RO'YXATDAN O'TISH"}
-            </button>
-
-            {status === "error" && (
-              <p style={{ color:"#e53", textAlign:"center", marginTop:10, fontSize:13 }}>
-                Xatolik yuz berdi. Qayta urinib ko'ring.
-              </p>
-            )}
-          </>
-        )}
+        <iframe
+          src="https://forms.amocrm.ru/forms/1676490/f09e3d886b18ad916f5e64433d629247"
+          frameBorder="0"
+          className="sm-amo-iframe"
+          title="Ro'yxatdan o'tish"
+          allow="autoplay"
+        />
       </div>
     </div>
   );
