@@ -24,96 +24,64 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   POPUP — amoCRM embed forma (faqat tugma bosilganda)
+   POPUP — o'z custom formamiz
+   (amoCRM ga to'g'ri POST qiladi)
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
-  const [formLoaded, setFormLoaded] = useState(false);
-  const [formError, setFormError] = useState(false);
+  const [name,   setName]   = useState("");
+  const [phone,  setPhone]  = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | success | error
 
+  // ESC tugma
   useEffect(() => {
-    if (!open) {
-      // Popup yopilganda formani tozalash
-      const container = document.getElementById("amoforms_1676490");
-      if (container) container.innerHTML = "";
-      return;
-    }
-
-    console.log("Popup opened, loading amoCRM form...");
-
-    // Oldingi skriptlarni tozalaymiz
-    const oldScripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
-    oldScripts.forEach(script => script.remove());
-
-    // amoCRM global obyektlarini tozalash
-    delete window.amo_forms_params;
-    delete window.amo_forms_load;
-    delete window.amo_forms_loaded;
-
-    // Form container ni tozalash
-    const container = document.getElementById("amoforms_1676490");
-    if (container) container.innerHTML = "";
-
-    // 1. Konfiguratsiya skripti
-    const configScript = document.createElement("script");
-    configScript.id = "amoforms_config";
-    configScript.innerHTML = `
-      !function(a,m,o,c,r,m){
-        a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
-        a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},
-        a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),
-        a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}
-      }(window,0,"amo_forms_","params","load","loaded");
-    `;
-    document.body.appendChild(configScript);
-
-    // 2. Asosiy form skripti
-    const formScript = document.createElement("script");
-    formScript.id = "amoforms_script_1676490";
-    formScript.async = true;
-    formScript.charset = "utf-8";
-    formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
-    
-    formScript.onload = () => {
-      console.log("✅ amoCRM form loaded successfully");
-      setFormLoaded(true);
-      setFormError(false);
-    };
-    
-    formScript.onerror = () => {
-      console.error("❌ amoCRM form failed to load");
-      setFormError(true);
-      setFormLoaded(false);
-    };
-    
-    document.body.appendChild(formScript);
-
-    // Cleanup
-    return () => {
-      const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
-      scripts.forEach(script => script.remove());
-    };
-  }, [open]);
-
-  // ESC tugmasi bilan yopish
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    const fn = e => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", fn);
+    return () => document.removeEventListener("keydown", fn);
   }, [onClose]);
 
-  // Body scroll ni boshqarish
+  // Body scroll lock
   useEffect(() => {
-    if (open) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  const handleSubmit = async () => {
+    if (!name.trim()) {
+      alert("Iltimos, ismingizni kiriting.");
+      return;
+    }
+    if (phone.trim().length < 9) {
+      alert("Telefon raqam 9 ta raqam bo'lishi kerak.");
+      return;
+    }
+    setStatus("loading");
+
+    try {
+      const body = new FormData();
+      body.append("form[id]",            "1676490");
+      body.append("form[hash]",          "f09e3d886b18ad916f5e64433d629247");
+      body.append("form[lang]",          "ru");
+      body.append("form[origin]",        window.location.href);
+      body.append("form[fields][name]",  name.trim());
+      body.append("form[fields][phone]", "+998" + phone.trim());
+
+      // no-cors — amoCRM CORS ruxsat bermaydi,
+      // lekin so'rov yetib boradi va lead yaratiladi
+      await fetch("https://forms.amocrm.ru/forms/submit", {
+        method: "POST",
+        body,
+        mode: "no-cors",
+      });
+
+      setStatus("success");
+      setName("");
+      setPhone("");
+      setTimeout(() => { setStatus("idle"); onClose(); }, 2200);
+    } catch {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 2500);
+    }
+  };
 
   if (!open) return null;
 
@@ -122,27 +90,65 @@ function Popup({ open, onClose }) {
       className="sm-overlay open"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="sm-popup sm-popup-amo">
+      <div className="sm-popup" role="dialog" aria-modal="true">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
-        
-        <h3 className="sm-popup-title">Ro'yxatdan o'tish</h3>
-        
-        {!formLoaded && !formError && (
-          <div className="sm-form-loading">
-            <div className="spinner"></div>
-            <p>Forma yuklanmoqda...</p>
+
+        {status === "success" ? (
+          <div style={{ textAlign:"center", padding:"28px 0" }}>
+            <div style={{ fontSize:56, marginBottom:16 }}>🎉</div>
+            <p style={{ fontSize:20, fontWeight:800, color:"#111" }}>
+              Muvaffaqiyatli yuborildi!
+            </p>
+            <p style={{ fontSize:14, color:"#888", marginTop:10 }}>
+              Tez orada siz bilan bog'lanamiz
+            </p>
           </div>
+        ) : (
+          <>
+            <p className="sm-popup-title">
+              Davom etish uchun ma'lumotlaringizni kiriting
+            </p>
+
+            <label className="sm-label">Ismingiz</label>
+            <input
+              className="sm-inp"
+              type="text"
+              placeholder="To'liq ismingiz"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              disabled={status === "loading"}
+              autoFocus
+            />
+
+            <label className="sm-label">Telefon raqamingiz</label>
+            <div className="sm-phone-wrap">
+              <div className="sm-phone-code">🇺🇿 +998</div>
+              <input
+                className="sm-phone-inp"
+                type="tel"
+                placeholder="90 123 45 67"
+                value={phone}
+                onChange={e => setPhone(e.target.value.replace(/\D/g, ""))}
+                maxLength={9}
+                disabled={status === "loading"}
+              />
+            </div>
+
+            <button
+              className="sm-submit"
+              onClick={handleSubmit}
+              disabled={status === "loading"}
+            >
+              {status === "loading" ? "Yuborilmoqda..." : "RO'YXATDAN O'TISH"}
+            </button>
+
+            {status === "error" && (
+              <p style={{ color:"#e53", textAlign:"center", marginTop:10, fontSize:13 }}>
+                Xatolik yuz berdi. Qayta urinib ko'ring.
+              </p>
+            )}
+          </>
         )}
-        
-        {formError && (
-          <div className="sm-form-error">
-            <p>Formani yuklashda xatolik yuz berdi.</p>
-            <p>Iltimos, qayta urinib ko'ring yoki telefon orqali bog'lanib: +998 78 113 90 90</p>
-          </div>
-        )}
-        
-        {/* amoCRM forma shu div ichiga yuklanadi */}
-        <div id="amoforms_1676490" />
       </div>
     </div>
   );
@@ -194,34 +200,25 @@ function Hero({ openPopup }) {
   return (
     <section className="sm-hero">
       <div className="sm-hero-bg" style={{ backgroundImage:`url(${heroBg})` }} />
-
       <div className="sm-hero-inner">
         <div className="sm-hero-person">
           <img src={heroPerson} alt="Umidjon Hudoyberdiev" />
         </div>
-
         <div className="sm-hero-text">
-          <div className="sm-insta sfu d1">
-            <InstaBadge />
-          </div>
-
+          <div className="sm-insta sfu d1"><InstaBadge /></div>
           <h1 className="sm-hero-title sfu d1">HAYOT BALANSIM</h1>
-
           <p className="sm-hero-sub sfu d2">
             Qanday qilib xotirangizni 10 barobarga kuchaytirish va
             istalgan ma'lumotlarni eslab qolish mumkin?
           </p>
-
           <button className="sm-btn sfu d3" onClick={openPopup}>
             Ro'yxatdan o'tish
           </button>
-
           <div className="sfu d4">
             <CtaLink onClick={openPopup} />
           </div>
         </div>
       </div>
-
       <div className="sm-sec-title-wrap">
         <p className="sm-sec-title">
           Ro'yxatdan o'tish orqali{" "}
@@ -239,69 +236,38 @@ function Benefits({ openPopup }) {
   return (
     <section className="sm-benefits">
       <div className="sm-benefits-inner">
-
         <div className="sm-row3">
           <div className="sm-card">
-            <div className="sm-card-imgbox">
-              <img src={card1} alt="Kurs dasturi" />
-            </div>
-            <div className="sm-card-body">
-              <p><strong>Kurs dasturi</strong><br />va batafsil ma'lumotlar</p>
-            </div>
+            <div className="sm-card-imgbox"><img src={card1} alt="Kurs dasturi" /></div>
+            <div className="sm-card-body"><p><strong>Kurs dasturi</strong><br />va batafsil ma'lumotlar</p></div>
           </div>
-
           <div className="sm-card">
-            <div className="sm-card-imgbox">
-              <img src={card2} alt="Eng arzon narxda" />
-            </div>
-            <div className="sm-card-body">
-              <p><strong>Eng arzon narxda</strong><br />kursga qo'shilish</p>
-            </div>
+            <div className="sm-card-imgbox"><img src={card2} alt="Eng arzon narxda" /></div>
+            <div className="sm-card-body"><p><strong>Eng arzon narxda</strong><br />kursga qo'shilish</p></div>
           </div>
-
           <div className="sm-card">
-            <div className="sm-card-imgbox">
-              <img src={card3} alt="Xotirani rivojlantirish" />
-            </div>
+            <div className="sm-card-imgbox"><img src={card3} alt="Xotirani rivojlantirish" /></div>
             <div className="sm-card-body">
-              <p>
-                <strong>Xotirani rivojlantirish</strong> uchun bepul
-                qo'llanma va materiallar
-              </p>
+              <p><strong>Xotirani rivojlantirish</strong> uchun bepul qo'llanma va materiallar</p>
             </div>
           </div>
         </div>
-
         <div className="sm-row2">
           <div className="sm-card">
-            <div className="sm-card-imgbox tall">
-              <img src={card4} alt="7 qadamlik reja" />
-            </div>
+            <div className="sm-card-imgbox tall"><img src={card4} alt="7 qadamlik reja" /></div>
             <div className="sm-card-body">
-              <p>
-                Superxotiraga ega bo'lish uchun{" "}
-                <strong>7 qadamlik</strong> to'liq reja
-              </p>
+              <p>Superxotiraga ega bo'lish uchun <strong>7 qadamlik</strong> to'liq reja</p>
             </div>
           </div>
-
           <div className="sm-card red">
-            <div className="sm-card-imgbox tall">
-              <img src={card5} alt="Sirli bonuslar" />
-            </div>
+            <div className="sm-card-imgbox tall"><img src={card5} alt="Sirli bonuslar" /></div>
             <div className="sm-card-body">
-              <p>
-                Hech qayerda berilmagan<br />
-                <strong>sirli bonuslar</strong> (sizga yoqishi aniq)
-              </p>
+              <p>Hech qayerda berilmagan<br /><strong>sirli bonuslar</strong> (sizga yoqishi aniq)</p>
             </div>
           </div>
         </div>
-
         <div className="sm-bcta">
-          <button className="sm-btn" onClick={openPopup}>
-            Ro'yxatdan o'tish
-          </button>
+          <button className="sm-btn" onClick={openPopup}>Ro'yxatdan o'tish</button>
           <CtaLink onClick={openPopup} />
         </div>
       </div>
@@ -316,9 +282,7 @@ function Author({ openPopup }) {
   return (
     <section className="sm-author">
       <div className="sm-author-inner">
-
         <h2 className="sm-author-title-text">Umidjon Hudoyberdiev</h2>
-
         <div className="sm-author-body">
           <div className="sm-creds">
             {CREDS.map((c, i) => (
@@ -327,13 +291,10 @@ function Author({ openPopup }) {
               </div>
             ))}
           </div>
-
           <div className="sm-author-right">
             <img className="sm-author-photo" src={authorPhoto} alt="Umidjon Hudoyberdiev" />
             <div className="sm-author-cta">
-              <button className="sm-btn" onClick={openPopup}>
-                Ro'yxatdan o'tish
-              </button>
+              <button className="sm-btn" onClick={openPopup}>Ro'yxatdan o'tish</button>
               <CtaLink onClick={openPopup} />
             </div>
           </div>
@@ -350,9 +311,7 @@ function Footer() {
   return (
     <footer className="sm-footer">
       <p className="sm-footer-name">Umidjon Hudoyberdiev</p>
-      <p className="sm-footer-phone">
-        <a href="tel:998781139090">+998 78 113 90 90</a>
-      </p>
+      <p className="sm-footer-phone"><a href="tel:998781139090">+998 78 113 90 90</a></p>
       <div className="sm-footer-legal">
         <p>"HAYOT BALANSIM" MCHJ</p>
         <p>Bog'ishamol MFY, Amir Temur shoh ko'chasi</p>
@@ -374,11 +333,6 @@ function Footer() {
 ───────────────────────────────────────────── */
 export default function UmidHudoyberdievVSL() {
   const [open, setOpen] = useState(false);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [open]);
 
   return (
     <>
