@@ -26,25 +26,27 @@ const CREDS = [
 /* ─────────────────────────────────────────────
    POPUP — amoCRM embed forma
 ───────────────────────────────────────────── */
+// Popup komponenti
 function Popup({ open, onClose }) {
   const [formLoaded, setFormLoaded] = useState(false);
-  const [formError, setFormError] = useState(false);
 
   useEffect(() => {
     if (!open) return;
 
-    // Oldingi skriptlarni tozalash
-    const oldScripts = document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]');
+    // Oldingi form elementlarini tozalash
+    const oldContainer = document.getElementById("amoforms_1676490");
+    if (oldContainer) oldContainer.innerHTML = "";
+
+    // Eski skriptlarni o'chirish
+    const oldScripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
     oldScripts.forEach(script => script.remove());
 
-    // amoCRM global obyektlarini tozalash
-    delete window.amo_forms_params;
-    delete window.amo_forms_load;
-    delete window.amo_forms_loaded;
+    // Yangi form container yaratish
+    const container = document.getElementById("amoforms_1676490");
+    if (!container) return;
 
-    // 1-script (konfiguratsiya)
+    // 1. Konfiguratsiya skripti
     const configScript = document.createElement("script");
-    configScript.id = "amoforms_config";
     configScript.innerHTML = `
       !function(a,m,o,c,r,m){
         a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
@@ -55,61 +57,53 @@ function Popup({ open, onClose }) {
     `;
     document.body.appendChild(configScript);
 
-    // 2-script (asosiy)
+    // 2. Asosiy form skripti
     const formScript = document.createElement("script");
-    formScript.id = "amoforms_script";
+    formScript.id = "amoforms_script_1676490";
     formScript.async = true;
     formScript.charset = "utf-8";
-    formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
+    formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?" + Date.now();
     
     formScript.onload = () => {
       console.log("✅ amoCRM form loaded");
       setFormLoaded(true);
     };
     
-    formScript.onerror = () => {
-      console.error("❌ amoCRM form failed to load");
-      setFormError(true);
-    };
-    
     document.body.appendChild(formScript);
 
-    // Cleanup
     return () => {
-      const container = document.getElementById("amoforms_1676490");
+      // Cleanup
+      const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
+      scripts.forEach(script => script.remove());
       if (container) container.innerHTML = "";
     };
   }, [open]);
 
-  // ESC tugma
+  // ESC tugmasi
   useEffect(() => {
-    const onKey = e => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [onClose]);
 
   if (!open) return null;
 
   return (
-    <div
-      className="sm-overlay open"
-      onClick={e => e.target === e.currentTarget && onClose()}
-    >
-      <div className="sm-popup sm-popup-amo">
+    <div className="sm-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="sm-popup">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
         
-        {!formLoaded && !formError && (
-          <div className="sm-form-loading">Yuklanmoqda...</div>
-        )}
-        
-        {formError && (
-          <div className="sm-form-error">
-            Formani yuklashda xatolik. Iltimos, qayta urinib ko'ring.
+        {!formLoaded && (
+          <div className="sm-form-loading">
+            <div className="spinner"></div>
+            <p>Forma yuklanmoqda...</p>
           </div>
         )}
         
-        {/* amoCRM forma shu div ichiga yuklanadi */}
-        <div id="amoforms_1676490" />
+        {/* amoCRM form shu yerda ko'rinadi */}
+        <div id="amoforms_1676490" className="amoforms-container" />
       </div>
     </div>
   );
