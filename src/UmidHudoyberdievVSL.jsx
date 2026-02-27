@@ -27,34 +27,58 @@ const CREDS = [
    POPUP — amoCRM embed forma
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
+  const [formLoaded, setFormLoaded] = useState(false);
+  const [formError, setFormError] = useState(false);
+
   useEffect(() => {
     if (!open) return;
 
-    // Oldingi skriptlarni tozalaymiz (qayta yuklash uchun)
-    const old1 = document.getElementById("amo_script_1");
-    const old2 = document.getElementById("amoforms_script_1676490");
-    if (old1) old1.remove();
-    if (old2) old2.remove();
+    // Oldingi skriptlarni tozalash
+    const oldScripts = document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]');
+    oldScripts.forEach(script => script.remove());
 
-    // amoCRM params reset
-    if (window.amo_forms_params) delete window.amo_forms_params;
-    if (window.amo_forms_load)   delete window.amo_forms_load;
-    if (window.amo_forms_loaded) delete window.amo_forms_loaded;
+    // amoCRM global obyektlarini tozalash
+    delete window.amo_forms_params;
+    delete window.amo_forms_load;
+    delete window.amo_forms_loaded;
 
-    // 1-script
-    const s1 = document.createElement("script");
-    s1.id   = "amo_script_1";
-    s1.text = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
-    document.body.appendChild(s1);
+    // 1-script (konfiguratsiya)
+    const configScript = document.createElement("script");
+    configScript.id = "amoforms_config";
+    configScript.innerHTML = `
+      !function(a,m,o,c,r,m){
+        a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
+        a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},
+        a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),
+        a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}
+      }(window,0,"amo_forms_","params","load","loaded");
+    `;
+    document.body.appendChild(configScript);
 
-    // 2-script (async)
-    const s2  = document.createElement("script");
-    s2.id     = "amoforms_script_1676490";
-    s2.async  = true;
-    s2.charset = "utf-8";
-    s2.src    = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?" + Date.now();
-    document.body.appendChild(s2);
+    // 2-script (asosiy)
+    const formScript = document.createElement("script");
+    formScript.id = "amoforms_script";
+    formScript.async = true;
+    formScript.charset = "utf-8";
+    formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
+    
+    formScript.onload = () => {
+      console.log("✅ amoCRM form loaded");
+      setFormLoaded(true);
+    };
+    
+    formScript.onerror = () => {
+      console.error("❌ amoCRM form failed to load");
+      setFormError(true);
+    };
+    
+    document.body.appendChild(formScript);
 
+    // Cleanup
+    return () => {
+      const container = document.getElementById("amoforms_1676490");
+      if (container) container.innerHTML = "";
+    };
   }, [open]);
 
   // ESC tugma
@@ -71,8 +95,19 @@ function Popup({ open, onClose }) {
       className="sm-overlay open"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="sm-popup sm-popup-amo" role="dialog">
+      <div className="sm-popup sm-popup-amo">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
+        
+        {!formLoaded && !formError && (
+          <div className="sm-form-loading">Yuklanmoqda...</div>
+        )}
+        
+        {formError && (
+          <div className="sm-form-error">
+            Formani yuklashda xatolik. Iltimos, qayta urinib ko'ring.
+          </div>
+        )}
+        
         {/* amoCRM forma shu div ichiga yuklanadi */}
         <div id="amoforms_1676490" />
       </div>
