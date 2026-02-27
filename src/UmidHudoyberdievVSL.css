@@ -277,17 +277,17 @@ html, body {
 
 /* Person – left */
 .sm-hero-person {
-  flex: 0 0 48%; 
-  display: flex;
-  align-items: flex-end; 
-  justify-content: flex-start;
+    flex: 0 0 48%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: end;
 }
 
 .sm-hero-person img {
   display: block;
   width: 100%; 
   max-width: 520px;
-  height: 750px;
+  height: 650px;
   object-fit: contain; 
   object-position: bottom left;
 }
@@ -617,7 +617,7 @@ html, body {
 .sm-author-photo {
   width: 100%; 
   max-width: 240px; 
-  max-height: 260px;
+  /* max-height: 260px; */
   display: block; 
   object-fit: contain;
 }
