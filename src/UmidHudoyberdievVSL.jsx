@@ -51,11 +51,10 @@ function Popup({ open, onClose }) {
       <div className="sm-popup sm-popup-iframe" role="dialog" aria-modal="true">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
         <iframe
-          src="https://forms.amocrm.ru/forms/1676490/f09e3d886b18ad916f5e64433d629247"
+          src="https://forms.amocrm.ru/form/16f5e64433d629247:1"
           frameBorder="0"
           className="sm-amo-iframe"
           title="Ro'yxatdan o'tish"
-          allow="autoplay"
         />
       </div>
     </div>
