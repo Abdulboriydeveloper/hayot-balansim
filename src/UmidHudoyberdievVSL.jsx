@@ -23,8 +23,6 @@ const CREDS = [
 function openAmoForm() {
   if (window.openAmoForm) {
     window.openAmoForm();
-  } else {
-    console.error("openAmoForm funksiyasi topilmadi");
   }
 }
 

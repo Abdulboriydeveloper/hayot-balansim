@@ -13,85 +13,84 @@
         box-sizing: border-box;
       }
       
-      /* Forma overlay - faqat forma uchun */
-      .amo-overlay {
+      /* Overlay - qoraygan joy */
+      #amoOverlay {
         display: none;
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.85);
+        background-color: rgba(0, 0, 0, 0.9);
         z-index: 999999;
         align-items: center;
         justify-content: center;
       }
       
-      .amo-overlay.active {
+      #amoOverlay.active {
         display: flex;
       }
       
-      /* Forma container */
-      .amo-container {
-        background-color: white;
+      /* Forma qutisi */
+      .amo-box {
+        background: white;
         width: 90%;
-        max-width: 500px;
+        max-width: 520px;
         border-radius: 24px;
-        padding: 25px;
+        padding: 30px 25px 25px;
         position: relative;
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
         max-height: 90vh;
         overflow-y: auto;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.5);
       }
       
-      /* Close tugmasi - aniq ko'rinadi */
-      .amo-close-btn {
+      /* CLOSE TUGMASI - katta va aniq */
+      #amoCloseBtn {
         position: absolute;
         top: 15px;
         right: 20px;
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
-        background-color: #f0f0f0;
-        border: none;
-        font-size: 24px;
+        background: #ec3737 !important;  /* Qizil rang */
+        border: 2px solid white !important;
+        color: white !important;
+        font-size: 28px;
         font-weight: bold;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: #333;
-        transition: all 0.2s;
-        z-index: 100;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        z-index: 1000000 !important;  /* Juda yuqori */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        line-height: 1;
       }
       
-      .amo-close-btn:hover {
-        background-color: #e0e0e0;
+      #amoCloseBtn:hover {
+        background: #c72a2a !important;
         transform: scale(1.1);
       }
       
       /* Sarlavha */
       .amo-title {
-        font-size: 22px;
+        font-size: 24px;
         font-weight: 700;
         color: #000;
         text-align: center;
-        margin-bottom: 20px;
-        margin-top: 5px;
-        padding-right: 30px;
+        margin-bottom: 25px;
+        padding-right: 40px;
       }
       
-      /* Yuklanish animatsiyasi */
+      /* Yuklanish */
       .amo-loading {
         text-align: center;
-        padding: 40px 20px;
+        padding: 50px 20px;
       }
       
       .amo-spinner {
-        width: 48px;
-        height: 48px;
-        border: 4px solid #f0f0f0;
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
         border-top: 4px solid #ec3737;
         border-radius: 50%;
         margin: 0 auto 20px;
@@ -105,7 +104,7 @@
       
       /* amoCRM form */
       #amoforms_1676490 {
-        min-height: 350px;
+        min-height: 380px;
         width: 100%;
       }
       
@@ -115,20 +114,20 @@
       }
       
       /* Mobil */
-      @media (max-width: 480px) {
-        .amo-container {
-          padding: 20px 15px;
+      @media (max-width: 600px) {
+        .amo-box {
+          padding: 25px 20px 20px;
         }
         .amo-title {
-          font-size: 18px;
-          margin-bottom: 15px;
+          font-size: 20px;
+          margin-bottom: 20px;
         }
-        .amo-close-btn {
-          top: 10px;
+        #amoCloseBtn {
+          top: 12px;
           right: 15px;
-          width: 36px;
-          height: 36px;
-          font-size: 22px;
+          width: 40px;
+          height: 40px;
+          font-size: 24px;
         }
       }
     </style>
@@ -136,11 +135,11 @@
   <body>
     <div id="root"></div>
     
-    <!-- To'g'ridan-to'g'ri amoCRM formasi uchun overlay -->
-    <div id="amoOverlay" class="amo-overlay">
-      <div class="amo-container">
-        <button id="amoCloseBtn" class="amo-close-btn">✕</button>
-        <h3 class="amo-title">Ro'yxatdan o'tish</h3>
+    <!-- To'g'ridan-to'g'ri amoCRM formasi -->
+    <div id="amoOverlay">
+      <div class="amo-box">
+        <button id="amoCloseBtn">✕</button>
+        <div class="amo-title">Ro'yxatdan o'tish</div>
         
         <div id="amoLoading" class="amo-loading">
           <div class="amo-spinner"></div>
@@ -156,24 +155,21 @@
         const overlay = document.getElementById('amoOverlay');
         const closeBtn = document.getElementById('amoCloseBtn');
         const loading = document.getElementById('amoLoading');
-        const formContainer = document.getElementById('amoforms_1676490');
         
-        // FORMA OCHISH - tugma bosilganda
+        // OCHISH
         window.openAmoForm = function() {
           console.log('📢 Forma ochilmoqda');
           overlay.classList.add('active');
           document.body.style.overflow = 'hidden';
           
-          // Formani yuklash (faqat bir marta)
-          if (!window.amoFormLoaded) {
+          if (!window.amoLoaded) {
             loadAmoForm();
           } else {
-            // Forma allaqachon yuklangan
             loading.style.display = 'none';
           }
         };
         
-        // FORMA YOPISH - close tugmasi yoki qora joy bosilganda
+        // YOPISH - HAR DOIM ISHLAYDI
         function closeAmoForm() {
           console.log('🔒 Forma yopilmoqda');
           overlay.classList.remove('active');
@@ -182,61 +178,55 @@
         
         // Close tugmasi
         if (closeBtn) {
-          closeBtn.addEventListener('click', function(e) {
+          closeBtn.onclick = function(e) {
             e.preventDefault();
             e.stopPropagation();
             closeAmoForm();
-          });
+            return false;
+          };
         }
         
-        // Qora joyga bosilganda (overlay)
+        // Overlay (qora joy)
         if (overlay) {
-          overlay.addEventListener('click', function(e) {
+          overlay.onclick = function(e) {
             if (e.target === overlay) {
               closeAmoForm();
             }
-          });
+          };
         }
         
         // ESC tugmasi
-        document.addEventListener('keydown', function(e) {
+        document.onkeydown = function(e) {
           if (e.key === 'Escape' && overlay.classList.contains('active')) {
             closeAmoForm();
           }
-        });
+        };
         
-        // amoCRM formani yuklash
+        // amoCRM yuklash
         function loadAmoForm() {
-          console.log('⏳ amoCRM yuklanmoqda...');
+          console.log('⏳ Yuklanmoqda...');
           
-          // Eski skriptlarni tozalash
-          document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]').forEach(s => s.remove());
+          // Tozalash
+          document.querySelectorAll('script[src*="amoforms"]').forEach(s => s.remove());
           
-          // Konfiguratsiya skripti
-          const configScript = document.createElement('script');
-          configScript.innerHTML = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
-          document.body.appendChild(configScript);
+          // Konfiguratsiya
+          const s1 = document.createElement('script');
+          s1.innerHTML = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
+          document.body.appendChild(s1);
           
           // Asosiy skript
-          const formScript = document.createElement('script');
-          formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
-          formScript.async = true;
+          const s2 = document.createElement('script');
+          s2.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
+          s2.async = true;
           
-          formScript.onload = function() {
-            console.log('✅ amoCRM yuklandi');
-            window.amoFormLoaded = true;
+          s2.onload = function() {
+            console.log('✅ Yuklandi');
+            window.amoLoaded = true;
             loading.style.display = 'none';
           };
           
-          formScript.onerror = function() {
-            console.error('❌ Yuklanmadi');
-            loading.innerHTML = '<p style="color: #e74c3c">Xatolik. Qayta urinib ko\'ring.</p>';
-          };
-          
-          document.body.appendChild(formScript);
+          document.body.appendChild(s2);
         }
-        
-        console.log('✅ Tizim tayyor');
       })();
     </script>
     
