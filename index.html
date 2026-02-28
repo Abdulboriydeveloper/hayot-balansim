@@ -15,8 +15,10 @@
       (function () {
         function closeAmo() {
           document.querySelectorAll("iframe.amoforms_iframe").forEach(el => el.remove());
-          const ov = document.getElementById("amo-overlay");
-          if (ov) ov.remove();
+          const ov  = document.getElementById("amo-overlay");
+          const btn = document.getElementById("amo-close-btn");
+          if (ov)  ov.remove();
+          if (btn) btn.remove();
           document.body.style.overflow = "";
         }
 
