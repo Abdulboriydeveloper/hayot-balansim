@@ -55,19 +55,19 @@ function Popup({ open, onClose }) {
     coreScript.async = true;
 
     coreScript.onload = () => {
-      const interval = setInterval(() => {
-        const form = document.getElementById("amoforms_1676490");
-        const mount = document.getElementById("amoforms_mount");
+  const interval = setInterval(() => {
+    const iframe = document.querySelector('iframe[src*="amoforms"]');
+    const mount = document.getElementById("amoforms_mount");
 
-        if (form && mount && !mount.contains(form)) {
-          mount.appendChild(form);
-          setFormLoaded(true);
-          clearInterval(interval);
-        }
-      }, 200);
+    if (iframe && mount && !mount.contains(iframe)) {
+      mount.appendChild(iframe);
+      setFormLoaded(true);
+      clearInterval(interval);
+    }
+  }, 200);
 
-      setTimeout(() => clearInterval(interval), 3000);
-    };
+  setTimeout(() => clearInterval(interval), 5000);
+};
 
     document.body.appendChild(coreScript);
 
