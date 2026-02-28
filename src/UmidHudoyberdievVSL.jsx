@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./UmidHudoyberdievVSL.css";
 
 // ─── LOCAL IMAGE IMPORTS ──────────────────────────────────────────────────────
@@ -24,93 +24,36 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   POPUP — SODDA VERSIYA (100% ishlaydi)
+   amoCRM FORMA YUKLASH
+   Tugma bosilganda skript yuklanadi →
+   amoCRM o'zi iframe chiqaradi →
+   index.html dagi MutationObserver yopish tugmasini qo'shadi
 ───────────────────────────────────────────── */
-/* ─────────────────────────────────────────────
-   POPUP — AMOCRM FORM TO‘G‘RI POPUP ICHIDA
-───────────────────────────────────────────── */
-function Popup({ open, onClose }) {
-  const [formLoaded, setFormLoaded] = useState(false);
+function openAmoForm() {
+  // Oldingi skriptlarni tozalash
+  document.getElementById("amo-init")?.remove();
+  document.getElementById("amo-core")?.remove();
 
-  useEffect(() => {
-    if (!open) return;
+  // amoCRM global holatni reset qilish
+  ["amo_forms_params", "amo_forms_load", "amo_forms_loaded"].forEach(k => {
+    try { delete window[k]; } catch (_) {}
+  });
 
-    setFormLoaded(false);
+  // 1. Init skript
+  const init = document.createElement("script");
+  init.id   = "amo-init";
+  init.text = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
+  document.body.appendChild(init);
 
-    const initScript = document.createElement("script");
-    initScript.id = "amo-init";
-    initScript.innerHTML = `
-      !function(a,m,o,c,r,m){
-        a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
-        a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},
-        a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),
-        a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}
-      }(window,0,"amo_forms_","params","load","loaded");
-    `;
-    document.body.appendChild(initScript);
-
-    const coreScript = document.createElement("script");
-    coreScript.id = "amo-core";
-    coreScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js";
-    coreScript.async = true;
-
-    coreScript.onload = () => {
-  const interval = setInterval(() => {
-    const iframe = document.querySelector('iframe[src*="amoforms"]');
-    const mount = document.getElementById("amoforms_mount");
-
-    if (iframe && mount && !mount.contains(iframe)) {
-      mount.appendChild(iframe);
-      setFormLoaded(true);
-      clearInterval(interval);
-    }
-  }, 200);
-
-  setTimeout(() => clearInterval(interval), 5000);
-};
-
-    document.body.appendChild(coreScript);
-
-    return () => {
-      document.getElementById("amo-init")?.remove();
-      document.getElementById("amo-core")?.remove();
-      document.getElementById("amoforms_1676490")?.remove();
-    };
-  }, [open]);
-
-  if (!open) return null;
-
-  return (
-    <div
-      onClick={onClose}
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "rgba(0,0,0,0.85)",
-        zIndex: 999999,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        animation: "fadeIn 0.25s ease"
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        className="popup-box"
-      >
-        <button className="popup-close" onClick={onClose}>✕</button>
-
-        <h3 className="popup-title">Ro'yxatdan o'tish</h3>
-
-        {!formLoaded && (
-          <div className="popup-loader">Forma yuklanmoqda...</div>
-        )}
-
-        <div id="amoforms_mount" />
-      </div>
-    </div>
-  );
+  // 2. Core skript
+  const core    = document.createElement("script");
+  core.id       = "amo-core";
+  core.async    = true;
+  core.charset  = "utf-8";
+  core.src      = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?" + Date.now();
+  document.body.appendChild(core);
 }
+
 /* ─────────────────────────────────────────────
    INSTAGRAM BADGE
 ───────────────────────────────────────────── */
@@ -138,11 +81,8 @@ function InstaBadge() {
 function CtaLink({ onClick }) {
   return (
     <div className="sm-ctalink-row">
-      <a
-        href="#"
-        className="sm-ctalink"
-        onClick={e => { e.preventDefault(); onClick(); }}
-      >
+      <a href="#" className="sm-ctalink"
+        onClick={e => { e.preventDefault(); onClick(); }}>
         Kursga oldindan ro'yxatdan o'ting
       </a>
       <img src={arrowIcon} className="sm-arrow" alt="" />
@@ -153,10 +93,10 @@ function CtaLink({ onClick }) {
 /* ─────────────────────────────────────────────
    HERO
 ───────────────────────────────────────────── */
-function Hero({ openPopup }) {
+function Hero() {
   return (
     <section className="sm-hero">
-      <div className="sm-hero-bg" style={{ backgroundImage:`url(${heroBg})` }} />
+      <div className="sm-hero-bg" style={{ backgroundImage: `url(${heroBg})` }} />
       <div className="sm-hero-inner">
         <div className="sm-hero-person">
           <img src={heroPerson} alt="Umidjon Hudoyberdiev" />
@@ -168,11 +108,11 @@ function Hero({ openPopup }) {
             Qanday qilib xotirangizni 10 barobarga kuchaytirish va
             istalgan ma'lumotlarni eslab qolish mumkin?
           </p>
-          <button className="sm-btn sfu d3" onClick={openPopup}>
+          <button className="sm-btn sfu d3" onClick={openAmoForm}>
             Ro'yxatdan o'tish
           </button>
           <div className="sfu d4">
-            <CtaLink onClick={openPopup} />
+            <CtaLink onClick={openAmoForm} />
           </div>
         </div>
       </div>
@@ -189,7 +129,7 @@ function Hero({ openPopup }) {
 /* ─────────────────────────────────────────────
    BENEFITS
 ───────────────────────────────────────────── */
-function Benefits({ openPopup }) {
+function Benefits() {
   return (
     <section className="sm-benefits">
       <div className="sm-benefits-inner">
@@ -224,8 +164,8 @@ function Benefits({ openPopup }) {
           </div>
         </div>
         <div className="sm-bcta">
-          <button className="sm-btn" onClick={openPopup}>Ro'yxatdan o'tish</button>
-          <CtaLink onClick={openPopup} />
+          <button className="sm-btn" onClick={openAmoForm}>Ro'yxatdan o'tish</button>
+          <CtaLink onClick={openAmoForm} />
         </div>
       </div>
     </section>
@@ -235,7 +175,7 @@ function Benefits({ openPopup }) {
 /* ─────────────────────────────────────────────
    AUTHOR
 ───────────────────────────────────────────── */
-function Author({ openPopup }) {
+function Author() {
   return (
     <section className="sm-author">
       <div className="sm-author-inner">
@@ -251,8 +191,8 @@ function Author({ openPopup }) {
           <div className="sm-author-right">
             <img className="sm-author-photo" src={authorPhoto} alt="Umidjon Hudoyberdiev" />
             <div className="sm-author-cta">
-              <button className="sm-btn" onClick={openPopup}>Ro'yxatdan o'tish</button>
-              <CtaLink onClick={openPopup} />
+              <button className="sm-btn" onClick={openAmoForm}>Ro'yxatdan o'tish</button>
+              <CtaLink onClick={openAmoForm} />
             </div>
           </div>
         </div>
@@ -286,17 +226,14 @@ function Footer() {
 }
 
 /* ─────────────────────────────────────────────
-   ROOT COMPONENT
+   ROOT
 ───────────────────────────────────────────── */
 export default function UmidHudoyberdievVSL() {
-  const [open, setOpen] = useState(false);
-
   return (
     <>
-      <Popup open={open} onClose={() => setOpen(false)} />
-      <Hero     openPopup={() => setOpen(true)} />
-      <Benefits openPopup={() => setOpen(true)} />
-      <Author   openPopup={() => setOpen(true)} />
+      <Hero />
+      <Benefits />
+      <Author />
       <Footer />
     </>
   );

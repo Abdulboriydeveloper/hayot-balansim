@@ -1,34 +1,55 @@
 <!doctype html>
-<html lang="en">
+<html lang="uz">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Umidjon Hudoyberdiev - oldindan ro'yxatdan o'tiish</title>
+    <title>Umidjon Hudoyberdiev - oldindan ro'yxatdan o'tish</title>
   </head>
-  <!-- AMO FORM POPUP FIX -->
-<script>
-  const observer = new MutationObserver(() => {
-    const iframe = document.querySelector("iframe.amoforms_iframe");
-
-    if (iframe && !document.querySelector(".amo-overlay")) {
-      const overlay = document.createElement("div");
-      overlay.className = "amo-overlay";
-
-      overlay.onclick = () => {
-        iframe.remove();
-        overlay.remove();
-      };
-
-      document.body.appendChild(overlay);
-    }
-  });
-
-  observer.observe(document.body, { childList: true });
-</script>
-</body>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- amoCRM forma overlay + yopish tugmasi -->
+    <script>
+      (function () {
+        function closeAmo() {
+          document.querySelectorAll("iframe.amoforms_iframe").forEach(el => el.remove());
+          const ov = document.getElementById("amo-overlay");
+          if (ov) ov.remove();
+          document.body.style.overflow = "";
+        }
+
+        // ESC bilan yopish
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeAmo();
+        });
+
+        // amoCRM iframe paydo bo'lishini kuzatish
+        const observer = new MutationObserver(function () {
+          const iframe = document.querySelector("iframe.amoforms_iframe");
+          if (!iframe || document.getElementById("amo-overlay")) return;
+
+          // Overlay
+          const overlay = document.createElement("div");
+          overlay.id = "amo-overlay";
+          overlay.onclick = function (e) {
+            if (e.target === overlay) closeAmo();
+          };
+
+          // Yopish tugmasi
+          const btn = document.createElement("button");
+          btn.id = "amo-close-btn";
+          btn.innerHTML = "&#10005;";
+          btn.onclick = closeAmo;
+
+          document.body.appendChild(overlay);
+          document.body.appendChild(btn);
+          document.body.style.overflow = "hidden";
+        });
+
+        observer.observe(document.body, { childList: true });
+      })();
+    </script>
   </body>
 </html>
