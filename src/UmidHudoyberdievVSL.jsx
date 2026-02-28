@@ -26,10 +26,12 @@ const CREDS = [
    amoCRM FORMA OCHISH
 ───────────────────────────────────────────── */
 function openAmoForm() {
+  console.log("openAmoForm called");
   if (window._openAmoForm) {
-    window._openAmoForm(); // index.html dagi funksiya
+    window._openAmoForm();
   } else {
-    console.error("Popup funksiyasi topilmadi");
+    console.error("Popup funksiyasi topilmadi - qayta yuklash kerak");
+    alert("Xatolik yuz berdi. Sahifani qayta yuklang.");
   }
 }
 

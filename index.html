@@ -25,7 +25,9 @@
         justify-content: center;
         z-index: 999999;
       }
-      .amo-overlay.open { display: flex; }
+      .amo-overlay.open { 
+        display: flex !important; 
+      }
       
       .amo-popup {
         background: white;
@@ -46,6 +48,11 @@
         font-size: 24px;
         cursor: pointer;
         color: #999;
+        z-index: 10;
+      }
+      
+      .amo-close:hover {
+        color: #333;
       }
       
       .amo-title {
@@ -62,6 +69,21 @@
         color: #666;
       }
       
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #f3f3f3;
+        border-top-color: #ec3737;
+        border-radius: 50%;
+        margin: 0 auto 15px;
+        animation: spin 1s linear infinite;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
       @keyframes popIn {
         from { opacity: 0; transform: scale(0.9); }
         to { opacity: 1; transform: scale(1); }
@@ -71,13 +93,13 @@
   <body>
     <div id="root"></div>
     
-    <!-- Popup container - tez ochilish uchun oldindan tayyor -->
+    <!-- Popup container - BOSHLANG'ICHA YOPIQ (open klass YO'Q) -->
     <div id="amo-overlay" class="amo-overlay">
       <div class="amo-popup">
         <button class="amo-close" id="amo-close-btn">✕</button>
         <div class="amo-title">Ro'yxatdan o'tish</div>
         <div id="amo-loading" class="amo-loading">
-          <div style="width:40px;height:40px;border:3px solid #f3f3f3;border-top-color:#ec3737;border-radius:50%;margin:0 auto 15px;animation:spin 1s linear infinite;"></div>
+          <div class="spinner"></div>
           <p>Forma yuklanmoqda...</p>
         </div>
         <div id="amoforms_1676490"></div>
@@ -90,8 +112,9 @@
         const closeBtn = document.getElementById('amo-close-btn');
         const loading = document.getElementById('amo-loading');
         
-        // Popupni ochish
+        // Popupni ochish - FAQAT tugma bosilganda
         window._openAmoForm = function() {
+          console.log("Opening popup...");
           overlay.classList.add('open');
           document.body.style.overflow = 'hidden';
           
@@ -103,13 +126,21 @@
         
         // Popupni yopish
         function closePopup() {
+          console.log("Closing popup...");
           overlay.classList.remove('open');
           document.body.style.overflow = '';
         }
         
-        closeBtn.onclick = closePopup;
+        closeBtn.onclick = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closePopup();
+        };
+        
         overlay.onclick = function(e) {
-          if (e.target === overlay) closePopup();
+          if (e.target === overlay) {
+            closePopup();
+          }
         };
         
         // ESC tugmasi
@@ -119,8 +150,12 @@
           }
         });
         
-        // amoCRM formani yuklash
+        // amoCRM formani yuklash (sahifa yuklangandan keyin)
         function loadAmoForm() {
+          if (window._amoFormLoaded) return;
+          
+          console.log("Loading amoCRM form...");
+          
           // Eski skriptlarni tozalash
           document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]').forEach(s => s.remove());
           
@@ -136,23 +171,31 @@
           core.src = 'https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=' + Date.now();
           
           core.onload = function() {
+            console.log("amoCRM form loaded successfully");
             window._amoFormLoaded = true;
             loading.style.display = 'none';
+          };
+          
+          core.onerror = function() {
+            console.error("Failed to load amoCRM form");
+            loading.innerHTML = '<p style="color:red">Formani yuklashda xatolik. Qayta urinib ko\'ring.</p>';
           };
           
           document.body.appendChild(core);
         }
         
-        // Sahifa yuklanganda formani oldindan yuklash (tezlik uchun)
+        // Sahifa to'liq yuklangandan KEYIN formani yuklash
         window.addEventListener('load', function() {
-          // 1 soniyadan keyin formani yuklashni boshlash
-          setTimeout(loadAmoForm, 1000);
+          // 2 soniya kutib, keyin yuklash (sahifa to'liq yuklansin)
+          setTimeout(function() {
+            if (!window._amoFormLoaded) {
+              console.log("Preloading amoCRM form...");
+              loadAmoForm();
+            }
+          }, 2000);
         });
         
-        // Spin animatsiyasi
-        const style = document.createElement('style');
-        style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-        document.head.appendChild(style);
+        console.log("Popup initialized - closed by default");
       })();
     </script>
     
