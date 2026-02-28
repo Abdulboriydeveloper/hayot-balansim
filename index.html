@@ -6,6 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umidjon Hudoyberdiev - oldindan ro'yxatdan o'tiish</title>
   </head>
+  <!-- AMO FORM POPUP FIX -->
+<script>
+  const observer = new MutationObserver(() => {
+    const iframe = document.querySelector("iframe.amoforms_iframe");
+
+    if (iframe && !document.querySelector(".amo-overlay")) {
+      const overlay = document.createElement("div");
+      overlay.className = "amo-overlay";
+
+      overlay.onclick = () => {
+        iframe.remove();
+        overlay.remove();
+      };
+
+      document.body.appendChild(overlay);
+    }
+  });
+
+  observer.observe(document.body, { childList: true });
+</script>
+</body>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>

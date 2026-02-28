@@ -32,6 +32,53 @@ body > div[id^="amoforms"] {
   inset: auto !important;
 }
 
+/* AMO FORM POPUP FIX */
+iframe.amoforms_iframe {
+  position: fixed !important;
+  inset: 0 !important;
+  margin: auto !important;
+
+  width: 90vw !important;
+  max-width: 520px !important;
+  height: auto !important;
+  max-height: 90vh !important;
+
+  z-index: 999999 !important;
+  border-radius: 16px !important;
+}
+
+iframe.amoforms_iframe {
+  animation: popupIn 0.35s ease-out;
+}
+
+@keyframes popupIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.amo-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 999998;
+}
+
+@media (max-width: 640px) {
+  iframe.amoforms_iframe {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: none !important;
+    max-height: none !important;
+    border-radius: 0 !important;
+  }
+}
+
 /* ══════════════════════════════════
    POPUP
 ══════════════════════════════════ */
