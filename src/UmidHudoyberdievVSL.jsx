@@ -20,11 +20,11 @@ const CREDS = [
 ];
 
 // Popupni ochish - index.html dagi funksiya
-function openPopup() {
-  if (window.openPopup) {
-    window.openPopup();
+function openAmoForm() {
+  if (window.openAmoForm) {
+    window.openAmoForm();
   } else {
-    console.error("openPopup funksiyasi topilmadi");
+    console.error("openAmoForm funksiyasi topilmadi");
   }
 }
 
@@ -66,11 +66,11 @@ function Hero() {
           <p className="sm-hero-sub sfu d2">
             Qanday qilib xotirangizni 10 barobarga kuchaytirish va istalgan ma'lumotlarni eslab qolish mumkin?
           </p>
-          <button className="sm-btn sfu d3" onClick={openPopup}>
+          <button className="sm-btn sfu d3" onClick={openAmoForm}>
             Ro'yxatdan o'tish
           </button>
           <div className="sfu d4">
-            <CtaLink onClick={openPopup} />
+            <CtaLink onClick={openAmoForm} />
           </div>
         </div>
       </div>
@@ -97,8 +97,8 @@ function Benefits() {
           <div className="sm-card red"><div className="sm-card-imgbox tall"><img src={card5} alt="Sirli bonuslar" /></div><div className="sm-card-body"><p>Hech qayerda berilmagan<br /><strong>sirli bonuslar</strong> (sizga yoqishi aniq)</p></div></div>
         </div>
         <div className="sm-bcta">
-          <button className="sm-btn" onClick={openPopup}>Ro'yxatdan o'tish</button>
-          <CtaLink onClick={openPopup} />
+          <button className="sm-btn" onClick={openAmoForm}>Ro'yxatdan o'tish</button>
+          <CtaLink onClick={openAmoForm} />
         </div>
       </div>
     </section>
@@ -119,8 +119,8 @@ function Author() {
           <div className="sm-author-right">
             <img className="sm-author-photo" src={authorPhoto} alt="Umidjon Hudoyberdiev" />
             <div className="sm-author-cta">
-              <button className="sm-btn" onClick={openPopup}>Ro'yxatdan o'tish</button>
-              <CtaLink onClick={openPopup} />
+              <button className="sm-btn" onClick={openAmoForm}>Ro'yxatdan o'tish</button>
+              <CtaLink onClick={openAmoForm} />
             </div>
           </div>
         </div>
