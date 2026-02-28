@@ -24,10 +24,13 @@ const CREDS = [
 
 /* ─────────────────────────────────────────────
    amoCRM FORMA OCHISH
-   (index.html dagi _openAmoForm ni chaqiradi)
 ───────────────────────────────────────────── */
 function openAmoForm() {
-  if (window._openAmoForm) window._openAmoForm();
+  if (window._openAmoForm) {
+    window._openAmoForm(); // index.html dagi funksiya
+  } else {
+    console.error("Popup funksiyasi topilmadi");
+  }
 }
 
 /* ─────────────────────────────────────────────
