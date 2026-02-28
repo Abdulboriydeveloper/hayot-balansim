@@ -37,7 +37,6 @@ function Popup({ open, onClose }) {
 
     setFormLoaded(false);
 
-    // 🔹 amoCRM init
     const initScript = document.createElement("script");
     initScript.id = "amo-init";
     initScript.innerHTML = `
@@ -50,28 +49,21 @@ function Popup({ open, onClose }) {
     `;
     document.body.appendChild(initScript);
 
-    // 🔹 amoCRM core
     const coreScript = document.createElement("script");
     coreScript.id = "amo-core";
     coreScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js";
     coreScript.async = true;
 
     coreScript.onload = () => {
-      const tryMoveForm = () => {
+      const interval = setInterval(() => {
         const form = document.getElementById("amoforms_1676490");
         const mount = document.getElementById("amoforms_mount");
 
         if (form && mount && !mount.contains(form)) {
           mount.appendChild(form);
           setFormLoaded(true);
-          return true;
+          clearInterval(interval);
         }
-        return false;
-      };
-
-      // amoCRM kech chiqishi mumkin → bir necha marta urinamiz
-      const interval = setInterval(() => {
-        if (tryMoveForm()) clearInterval(interval);
       }, 200);
 
       setTimeout(() => clearInterval(interval), 3000);
@@ -80,13 +72,9 @@ function Popup({ open, onClose }) {
     document.body.appendChild(coreScript);
 
     return () => {
-      const init = document.getElementById("amo-init");
-      const core = document.getElementById("amo-core");
-      const form = document.getElementById("amoforms_1676490");
-
-      if (init) init.remove();
-      if (core) core.remove();
-      if (form) form.remove();
+      document.getElementById("amo-init")?.remove();
+      document.getElementById("amo-core")?.remove();
+      document.getElementById("amoforms_1676490")?.remove();
     };
   }, [open]);
 
@@ -98,65 +86,31 @@ function Popup({ open, onClose }) {
       style={{
         position: "fixed",
         inset: 0,
-        backgroundColor: "rgba(0,0,0,0.9)",
+        background: "rgba(0,0,0,0.85)",
+        zIndex: 999999,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: 999999
+        animation: "fadeIn 0.25s ease"
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        style={{
-          backgroundColor: "#fff",
-          width: "90%",
-          maxWidth: "500px",
-          borderRadius: "20px",
-          padding: "30px",
-          position: "relative"
-        }}
+        className="popup-box"
       >
-        <button
-          onClick={onClose}
-          style={{
-            position: "absolute",
-            top: "10px",
-            right: "15px",
-            border: "none",
-            background: "none",
-            fontSize: "24px",
-            cursor: "pointer",
-            color: "#999"
-          }}
-        >
-          ✕
-        </button>
+        <button className="popup-close" onClick={onClose}>✕</button>
 
-        <h3
-          style={{
-            fontSize: "22px",
-            fontWeight: "bold",
-            textAlign: "center",
-            marginBottom: "20px",
-            color: "#333"
-          }}
-        >
-          Ro'yxatdan o'tish
-        </h3>
+        <h3 className="popup-title">Ro'yxatdan o'tish</h3>
 
         {!formLoaded && (
-          <div style={{ textAlign: "center", padding: "30px" }}>
-            <p>Forma yuklanmoqda...</p>
-          </div>
+          <div className="popup-loader">Forma yuklanmoqda...</div>
         )}
 
-        {/* 🔥 AMOCRM FORM FAQAT SHU YERGA TUSHADI */}
         <div id="amoforms_mount" />
       </div>
     </div>
   );
 }
-
 /* ─────────────────────────────────────────────
    INSTAGRAM BADGE
 ───────────────────────────────────────────── */
