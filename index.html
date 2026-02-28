@@ -6,199 +6,169 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umidjon Hudoyberdiev - oldindan ro'yxatdan o'tish</title>
 
-    <!-- amoCRM skriptlarini oldindan yuklash (TEZLIK UCHUN) -->
+    <!-- amoCRM serveriga oldindan ulanish (tezlik uchun) -->
     <link rel="preconnect" href="https://forms.amocrm.ru" />
     <link rel="dns-prefetch" href="https://forms.amocrm.ru" />
-    <link rel="preload" as="script" href="https://forms.amocrm.ru/forms/assets/js/amoforms.js" />
-    
+
     <style>
-      /* Popup stillari - tez chiqishi uchun */
-      .amo-overlay {
+      /* Popup overlay */
+      #amo-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.9);
+        inset: 0;
+        background: rgba(0,0,0,0.82);
+        backdrop-filter: blur(3px);
         display: none;
         align-items: center;
         justify-content: center;
         z-index: 999999;
+        padding: 16px;
       }
-      .amo-overlay.open { 
-        display: flex !important; 
+      #amo-overlay.open {
+        display: flex;
       }
-      
-      .amo-popup {
-        background: white;
-        width: 90%;
+      /* Popup box */
+      #amo-popup {
+        background: #fff;
+        width: 100%;
         max-width: 500px;
-        border-radius: 20px;
-        padding: 30px;
+        border-radius: 22px;
+        padding: 44px 28px 28px;
         position: relative;
-        animation: popIn 0.2s ease;
+        animation: amoPopIn 0.22s cubic-bezier(0.16,1,0.3,1);
+        min-height: 200px;
       }
-      
-      .amo-close {
+      @keyframes amoPopIn {
+        from { opacity: 0; transform: scale(0.93) translateY(12px); }
+        to   { opacity: 1; transform: scale(1)   translateY(0); }
+      }
+      /* Yopish tugmasi */
+      #amo-close {
         position: absolute;
-        top: 10px;
-        right: 15px;
-        border: none;
-        background: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #999;
-        z-index: 10;
-      }
-      
-      .amo-close:hover {
-        color: #333;
-      }
-      
-      .amo-title {
-        font-size: 22px;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 20px;
-        color: #333;
-      }
-      
-      .amo-loading {
-        text-align: center;
-        padding: 40px;
-        color: #666;
-      }
-      
-      .spinner {
-        width: 40px;
-        height: 40px;
-        border: 3px solid #f3f3f3;
-        border-top-color: #ec3737;
+        top: 12px; right: 14px;
+        width: 34px; height: 34px;
         border-radius: 50%;
-        margin: 0 auto 15px;
-        animation: spin 1s linear infinite;
+        border: none;
+        background: #f0f0f0;
+        color: #555;
+        font-size: 18px;
+        cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        transition: background 0.15s;
+        line-height: 1;
       }
-      
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+      #amo-close:hover { background: #e0e0e0; color: #000; }
+      /* Yuklanmoqda */
+      #amo-loader {
+        text-align: center;
+        padding: 30px 0 10px;
+        color: #888;
+        font-family: Inter, sans-serif;
+        font-size: 15px;
       }
-      
-      @keyframes popIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
+      .amo-spinner {
+        width: 36px; height: 36px;
+        border: 3px solid #f0f0f0;
+        border-top-color: #e8b84b;
+        border-radius: 50%;
+        margin: 0 auto 12px;
+        animation: amoSpin 0.8s linear infinite;
+      }
+      @keyframes amoSpin {
+        to { transform: rotate(360deg); }
+      }
+      /* Mobile */
+      @media (max-width: 520px) {
+        #amo-popup {
+          border-radius: 18px;
+          padding: 40px 16px 20px;
+        }
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
-    
-    <!-- Popup container - BOSHLANG'ICHA YOPIQ (open klass YO'Q) -->
-    <div id="amo-overlay" class="amo-overlay">
-      <div class="amo-popup">
-        <button class="amo-close" id="amo-close-btn">✕</button>
-        <div class="amo-title">Ro'yxatdan o'tish</div>
-        <div id="amo-loading" class="amo-loading">
-          <div class="spinner"></div>
+
+    <!-- POPUP (boshlang'ichda yopiq, JS boshqaradi) -->
+    <div id="amo-overlay">
+      <div id="amo-popup">
+        <button id="amo-close">✕</button>
+        <div id="amo-loader">
+          <div class="amo-spinner"></div>
           <p>Forma yuklanmoqda...</p>
         </div>
+        <!-- amoCRM forma shu yerga yuklanadi -->
         <div id="amoforms_1676490"></div>
       </div>
     </div>
 
     <script>
-      (function() {
-        const overlay = document.getElementById('amo-overlay');
-        const closeBtn = document.getElementById('amo-close-btn');
-        const loading = document.getElementById('amo-loading');
-        
-        // Popupni ochish - FAQAT tugma bosilganda
-        window._openAmoForm = function() {
-          console.log("Opening popup...");
-          overlay.classList.add('open');
-          document.body.style.overflow = 'hidden';
-          
-          // Forma yuklanganmi?
-          if (!window._amoFormLoaded) {
-            loadAmoForm();
-          }
-        };
-        
-        // Popupni yopish
+      (function () {
+        var overlay  = document.getElementById("amo-overlay");
+        var loader   = document.getElementById("amo-loader");
+        var formDiv  = document.getElementById("amoforms_1676490");
+
+        var formLoaded  = false;
+        var formLoading = false;
+
+        /* ── YOPISH ── */
         function closePopup() {
-          console.log("Closing popup...");
-          overlay.classList.remove('open');
-          document.body.style.overflow = '';
+          overlay.classList.remove("open");
+          document.body.style.overflow = "";
         }
-        
-        closeBtn.onclick = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-          closePopup();
-        };
-        
-        overlay.onclick = function(e) {
-          if (e.target === overlay) {
-            closePopup();
-          }
-        };
-        
-        // ESC tugmasi
-        document.addEventListener('keydown', function(e) {
-          if (e.key === 'Escape' && overlay.classList.contains('open')) {
-            closePopup();
-          }
+
+        document.getElementById("amo-close").onclick = closePopup;
+        overlay.onclick = function(e) { if (e.target === overlay) closePopup(); };
+        document.addEventListener("keydown", function(e) {
+          if (e.key === "Escape" && overlay.classList.contains("open")) closePopup();
         });
-        
-        // amoCRM formani yuklash (sahifa yuklangandan keyin)
-        function loadAmoForm() {
-          if (window._amoFormLoaded) return;
-          
-          console.log("Loading amoCRM form...");
-          
-          // Eski skriptlarni tozalash
-          document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]').forEach(s => s.remove());
-          
-          // Konfiguratsiya
-          const init = document.createElement('script');
-          init.innerHTML = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
+
+        /* ── amoCRM SKRIPTINI YUKLASH ── */
+        function loadForm() {
+          if (formLoading) return;
+          formLoading = true;
+
+          // Init
+          var init  = document.createElement("script");
+          init.text = '!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");';
           document.body.appendChild(init);
-          
-          // Asosiy skript
-          const core = document.createElement('script');
-          core.async = true;
-          core.charset = 'utf-8';
-          core.src = 'https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=' + Date.now();
-          
+
+          // Core — URL sabit (kesh ishlashi uchun, Date.now() YO'Q)
+          var core     = document.createElement("script");
+          core.async   = true;
+          core.charset = "utf-8";
+          core.src     = "https://forms.amocrm.ru/forms/assets/js/amoforms.js";
+
           core.onload = function() {
-            console.log("amoCRM form loaded successfully");
-            window._amoFormLoaded = true;
-            loading.style.display = 'none';
+            formLoaded  = true;
+            formLoading = false;
+            loader.style.display = "none";
           };
-          
+
           core.onerror = function() {
-            console.error("Failed to load amoCRM form");
-            loading.innerHTML = '<p style="color:red">Formani yuklashda xatolik. Qayta urinib ko\'ring.</p>';
+            formLoading = false;
+            loader.innerHTML = "<p style='color:#e53;font-family:Inter,sans-serif'>Xatolik yuz berdi. Sahifani qayta yuklang.</p>";
           };
-          
+
           document.body.appendChild(core);
         }
-        
-        // Sahifa to'liq yuklangandan KEYIN formani yuklash
-        window.addEventListener('load', function() {
-          // 2 soniya kutib, keyin yuklash (sahifa to'liq yuklansin)
-          setTimeout(function() {
-            if (!window._amoFormLoaded) {
-              console.log("Preloading amoCRM form...");
-              loadAmoForm();
-            }
-          }, 2000);
-        });
-        
-        console.log("Popup initialized - closed by default");
+
+        /* ── OCHISH (tugma bosilganda chaqiriladi) ── */
+        window._openAmoForm = function() {
+          // Allaqachon ochiqmi? Qayta ochma
+          if (overlay.classList.contains("open")) return;
+
+          overlay.classList.add("open");
+          document.body.style.overflow = "hidden";
+
+          // Forma hali yuklanmagan bo'lsa — yukla
+          if (!formLoaded && !formLoading) {
+            loadForm();
+          }
+        };
+
       })();
     </script>
-    
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
