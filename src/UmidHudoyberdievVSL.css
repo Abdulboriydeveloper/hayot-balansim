@@ -142,8 +142,9 @@ html, body {
 .sm-hero-person img {
   display:block;
   width:100%; max-width:520px;
-  height:750px;
-  object-fit:contain; object-position:bottom left;
+  height:650px;
+  object-fit:contain; 
+  object-position:bottom right;
 }
 
 /* Text – right */
@@ -320,7 +321,7 @@ html, body {
   display:flex; flex-direction:column; align-items:center;
 }
 .sm-author-photo {
-  width:100%; max-width:240px; max-height:260px;
+  width:100%; max-width:240px;
   display:block; object-fit:contain;
 }
 .sm-author-cta {
