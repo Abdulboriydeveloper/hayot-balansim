@@ -37,10 +37,9 @@ iframe.amoforms_iframe {
   position: fixed !important;
   inset: 0 !important;
   margin: auto !important;
-
   width: 90vw !important;
   max-width: 520px !important;
-  height: auto !important;
+  height: 502px !important;
   max-height: 90vh !important;
 
   z-index: 999999 !important;
@@ -49,6 +48,7 @@ iframe.amoforms_iframe {
 
 iframe.amoforms_iframe {
   animation: popupIn 0.35s ease-out;
+  height: 502px !important;
 }
 
 @keyframes popupIn {
