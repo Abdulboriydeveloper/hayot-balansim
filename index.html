@@ -5,45 +5,70 @@
     <link rel="icon" type="image/svg+xml" href="" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umidjon Hudoyberdiev - oldindan ro'yxatdan o'tish</title>
+
+    <!-- amoCRM skriptini oldindan yuklash (tezlashtirish uchun) -->
+    <link rel="preload" as="script" href="https://forms.amocrm.ru/forms/assets/js/amoforms.js" />
+    <link rel="dns-prefetch" href="https://forms.amocrm.ru" />
+    <link rel="preconnect" href="https://forms.amocrm.ru" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
 
-    <!-- amoCRM forma overlay + yopish tugmasi -->
     <script>
       (function () {
+        var AMO_SCRIPT = "https://forms.amocrm.ru/forms/assets/js/amoforms.js";
+
+        // ── YOPISH ──────────────────────────────────────────
         function closeAmo() {
-          document.querySelectorAll("iframe.amoforms_iframe").forEach(el => el.remove());
-          const ov  = document.getElementById("amo-overlay");
-          const btn = document.getElementById("amo-close-btn");
-          if (ov)  ov.remove();
-          if (btn) btn.remove();
+          document.querySelectorAll("iframe.amoforms_iframe").forEach(function(el) { el.remove(); });
+          ["amo-overlay", "amo-close-btn"].forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) el.remove();
+          });
           document.body.style.overflow = "";
         }
 
-        // ESC bilan yopish
-        document.addEventListener("keydown", function (e) {
+        document.addEventListener("keydown", function(e) {
           if (e.key === "Escape") closeAmo();
         });
 
-        // amoCRM iframe paydo bo'lishini kuzatish
-        const observer = new MutationObserver(function () {
-          const iframe = document.querySelector("iframe.amoforms_iframe");
+        // ── OCHISH (tugma bosilganda chaqiriladi) ────────────
+        window._openAmoForm = function() {
+          ["amo-init", "amo-core"].forEach(function(id) {
+            var s = document.getElementById(id);
+            if (s) s.remove();
+          });
+          ["amo_forms_params", "amo_forms_load", "amo_forms_loaded"].forEach(function(k) {
+            try { delete window[k]; } catch(_) {}
+          });
+
+          var init  = document.createElement("script");
+          init.id   = "amo-init";
+          init.text = '!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");';
+          document.body.appendChild(init);
+
+          var core     = document.createElement("script");
+          core.id      = "amo-core";
+          core.async   = true;
+          core.charset = "utf-8";
+          core.src     = AMO_SCRIPT; // keshdan keladi — tez
+          document.body.appendChild(core);
+        };
+
+        // ── IFRAME PAYDO BO'LGANDA OVERLAY QO'SHISH ─────────
+        var observer = new MutationObserver(function() {
+          var iframe = document.querySelector("iframe.amoforms_iframe");
           if (!iframe || document.getElementById("amo-overlay")) return;
 
-          // Overlay
-          const overlay = document.createElement("div");
-          overlay.id = "amo-overlay";
-          overlay.onclick = function (e) {
-            if (e.target === overlay) closeAmo();
-          };
+          var overlay    = document.createElement("div");
+          overlay.id     = "amo-overlay";
+          overlay.onclick = function(e) { if (e.target === overlay) closeAmo(); };
 
-          // Yopish tugmasi
-          const btn = document.createElement("button");
-          btn.id = "amo-close-btn";
+          var btn       = document.createElement("button");
+          btn.id        = "amo-close-btn";
           btn.innerHTML = "&#10005;";
-          btn.onclick = closeAmo;
+          btn.onclick   = closeAmo;
 
           document.body.appendChild(overlay);
           document.body.appendChild(btn);

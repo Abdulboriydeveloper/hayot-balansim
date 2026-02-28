@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./UmidHudoyberdievVSL.css";
 
 // ─── LOCAL IMAGE IMPORTS ──────────────────────────────────────────────────────
@@ -24,34 +23,11 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   amoCRM FORMA YUKLASH
-   Tugma bosilganda skript yuklanadi →
-   amoCRM o'zi iframe chiqaradi →
-   index.html dagi MutationObserver yopish tugmasini qo'shadi
+   amoCRM FORMA OCHISH
+   (index.html dagi _openAmoForm ni chaqiradi)
 ───────────────────────────────────────────── */
 function openAmoForm() {
-  // Oldingi skriptlarni tozalash
-  document.getElementById("amo-init")?.remove();
-  document.getElementById("amo-core")?.remove();
-
-  // amoCRM global holatni reset qilish
-  ["amo_forms_params", "amo_forms_load", "amo_forms_loaded"].forEach(k => {
-    try { delete window[k]; } catch (_) {}
-  });
-
-  // 1. Init skript
-  const init = document.createElement("script");
-  init.id   = "amo-init";
-  init.text = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
-  document.body.appendChild(init);
-
-  // 2. Core skript
-  const core    = document.createElement("script");
-  core.id       = "amo-core";
-  core.async    = true;
-  core.charset  = "utf-8";
-  core.src      = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?" + Date.now();
-  document.body.appendChild(core);
+  if (window._openAmoForm) window._openAmoForm();
 }
 
 /* ─────────────────────────────────────────────
