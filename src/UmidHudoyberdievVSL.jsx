@@ -24,10 +24,85 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   POPUP — amoCRM forma iframe orqali
+   POPUP — amoCRM forma (JavaScript orqali)
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
-  const [iframeError, setIframeError] = useState(false);
+  const [formLoaded, setFormLoaded] = useState(false);
+  const [formError, setFormError] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      // Popup yopilganda formani tozalash
+      const container = document.getElementById("amoforms_1676490");
+      if (container) container.innerHTML = "";
+      
+      // Skriptlarni tozalash
+      const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
+      scripts.forEach(script => script.remove());
+      
+      delete window.amo_forms_params;
+      delete window.amo_forms_load;
+      delete window.amo_forms_loaded;
+      
+      setFormLoaded(false);
+      setFormError(false);
+      return;
+    }
+
+    console.log("📢 Popup opened, loading amoCRM form...");
+
+    // Eski skriptlarni tozalash
+    const oldScripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
+    oldScripts.forEach(script => script.remove());
+
+    // amoCRM global obyektlarini tozalash
+    delete window.amo_forms_params;
+    delete window.amo_forms_load;
+    delete window.amo_forms_loaded;
+
+    // Form container ni tozalash
+    const container = document.getElementById("amoforms_1676490");
+    if (container) container.innerHTML = "";
+
+    // 1. Konfiguratsiya skripti (SIZNING KODINGIZ)
+    const configScript = document.createElement("script");
+    configScript.innerHTML = `
+      !function(a,m,o,c,r,m){
+        a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
+        a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},
+        a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),
+        a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}
+      }(window,0,"amo_forms_","params","load","loaded");
+    `;
+    document.body.appendChild(configScript);
+
+    // 2. Asosiy form skripti (SIZNING KODINGIZ)
+    const formScript = document.createElement("script");
+    formScript.id = "amoforms_script_1676490";
+    formScript.async = true;
+    formScript.charset = "utf-8";
+    formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?1772192007";
+    
+    formScript.onload = () => {
+      console.log("✅ amoCRM form loaded successfully");
+      setFormLoaded(true);
+      setFormError(false);
+    };
+    
+    formScript.onerror = () => {
+      console.error("❌ amoCRM form failed to load");
+      setFormError(true);
+      setFormLoaded(false);
+    };
+    
+    document.body.appendChild(formScript);
+
+    // Cleanup
+    return () => {
+      const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
+      scripts.forEach(script => script.remove());
+    };
+  }, [open]);
 
   // ESC tugma
   useEffect(() => {
@@ -49,33 +124,30 @@ function Popup({ open, onClose }) {
       className="sm-overlay open"
       onClick={e => e.target === e.currentTarget && onClose()}
     >
-      <div className="sm-popup sm-popup-iframe" role="dialog" aria-modal="true">
+      <div className="sm-popup sm-popup-amo" role="dialog" aria-modal="true">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
         
-        {iframeError && (
+        <h3 className="sm-popup-title">Ro'yxatdan o'tish</h3>
+        
+        {!formLoaded && !formError && (
+          <div className="sm-form-loading">
+            <div className="spinner"></div>
+            <p>Forma yuklanmoqda...</p>
+          </div>
+        )}
+        
+        {formError && (
           <div className="sm-form-error">
             <p>Formani yuklashda xatolik yuz berdi.</p>
             <p>Iltimos, qayta urinib ko'ring yoki telefon orqali bog'lanib: +998 78 113 90 90</p>
-            <button className="sm-retry-btn" onClick={() => window.location.reload()}>
-              Qayta urinish
+            <button className="sm-retry-btn" onClick={onClose}>
+              Yopish
             </button>
           </div>
         )}
         
-        <iframe
-          src="https://forms.amocrm.ru/forms/embed/1676490"
-          frameBorder="0"
-          className="sm-amo-iframe"
-          title="Ro'yxatdan o'tish"
-          onLoad={() => {
-            console.log("Iframe loaded successfully");
-            setIframeError(false);
-          }}
-          onError={() => {
-            console.error("Iframe failed to load");
-            setIframeError(true);
-          }}
-        />
+        {/* amoCRM forma shu div ichiga yuklanadi */}
+        <div id="amoforms_1676490" />
       </div>
     </div>
   );
