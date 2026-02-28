@@ -6,87 +6,237 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Umidjon Hudoyberdiev - oldindan ro'yxatdan o'tish</title>
     <link rel="preconnect" href="https://forms.amocrm.ru" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      /* Popup stillari */
+      #popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 999999;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      #popup.active {
+        display: flex;
+      }
+      
+      .popup-content {
+        background: white;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 24px;
+        padding: 30px;
+        position: relative;
+        animation: popIn 0.2s ease;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      
+      #closePopup {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #f1f1f1;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        transition: all 0.2s;
+        z-index: 10;
+      }
+      
+      #closePopup:hover {
+        background: #e0e0e0;
+        transform: scale(1.1);
+      }
+      
+      .popup-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #000;
+        text-align: center;
+        margin-bottom: 25px;
+        padding-right: 30px;
+      }
+      
+      #loading {
+        text-align: center;
+        padding: 40px 20px;
+      }
+      
+      .spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #ec3737;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        animation: spin 1s linear infinite;
+      }
+      
+      #loading p {
+        color: #666;
+        font-size: 16px;
+      }
+      
+      #amoforms_1676490 {
+        min-height: 300px;
+        width: 100%;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9) translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1) translateY(0);
+        }
+      }
+      
+      /* Mobile */
+      @media (max-width: 480px) {
+        .popup-content {
+          padding: 25px 20px;
+        }
+        .popup-title {
+          font-size: 20px;
+          margin-bottom: 20px;
+        }
+        #closePopup {
+          top: 10px;
+          right: 15px;
+          width: 32px;
+          height: 32px;
+          font-size: 20px;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
     
-    <!-- Popup - HTMLda mavjud lekin ko'rinmaydi -->
-    <div id="popup" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 999999; align-items: center; justify-content: center;">
-      <div style="background: white; width: 90%; max-width: 500px; border-radius: 20px; padding: 30px; position: relative;">
-        <button id="closePopupBtn" style="position: absolute; top: 10px; right: 15px; border: none; background: none; font-size: 24px; cursor: pointer;">✕</button>
-        <h3 style="font-size: 22px; font-weight: bold; text-align: center; margin-bottom: 20px;">Ro'yxatdan o'tish</h3>
-        <div id="loading" style="text-align: center; padding: 40px;">
-          <div style="width: 40px; height: 40px; border: 3px solid #f3f3f3; border-top: 3px solid #ec3737; border-radius: 50%; margin: 0 auto 15px; animation: spin 1s linear infinite;"></div>
+    <!-- Popup - HTMLda tayyor, lekin ko'rinmaydi -->
+    <div id="popup">
+      <div class="popup-content">
+        <button id="closePopup">✕</button>
+        <h3 class="popup-title">Ro'yxatdan o'tish</h3>
+        
+        <div id="loading">
+          <div class="spinner"></div>
           <p>Forma yuklanmoqda...</p>
         </div>
+        
         <div id="amoforms_1676490"></div>
       </div>
     </div>
 
-    <style>
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    </style>
-
     <script>
-      // Popupni boshqarish
-      const popup = document.getElementById('popup');
-      const closeBtn = document.getElementById('closePopupBtn');
-      
-      // Ochish funksiyasi - FAQAT tugma bosilganda ishlaydi
-      window.openPopup = function() {
-        console.log('Opening popup');
-        popup.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+      (function() {
+        const popup = document.getElementById('popup');
+        const closeBtn = document.getElementById('closePopup');
+        const loading = document.getElementById('loading');
         
-        // Formani yuklash (faqat bir marta)
-        if (!window.formLoaded) {
-          loadForm();
-        }
-      };
-      
-      // Yopish funksiyasi
-      function closePopup() {
-        console.log('Closing popup');
-        popup.style.display = 'none';
-        document.body.style.overflow = '';
-      }
-      
-      closeBtn.onclick = closePopup;
-      
-      // Overlayni bosganda yopish
-      popup.onclick = function(e) {
-        if (e.target === popup) closePopup();
-      };
-      
-      // ESC tugmasi
-      document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && popup.style.display === 'flex') {
-          closePopup();
-        }
-      });
-      
-      // Formani yuklash
-      function loadForm() {
-        console.log('Loading form...');
-        
-        // Konfiguratsiya
-        const script1 = document.createElement('script');
-        script1.innerHTML = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
-        document.body.appendChild(script1);
-        
-        // Asosiy skript
-        const script2 = document.createElement('script');
-        script2.src = 'https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=' + Date.now();
-        script2.async = true;
-        
-        script2.onload = function() {
-          console.log('Form loaded');
-          window.formLoaded = true;
-          document.getElementById('loading').style.display = 'none';
+        // Popupni ochish - FAQAT tugma bosilganda
+        window.openPopup = function() {
+          console.log('Opening popup');
+          popup.classList.add('active');
+          document.body.style.overflow = 'hidden';
+          
+          // Formani yuklash (faqat bir marta)
+          if (!window.formLoaded) {
+            loadForm();
+          }
         };
         
-        document.body.appendChild(script2);
-      }
+        // Popupni yopish funksiyasi
+        function closePopup() {
+          console.log('Closing popup');
+          popup.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+        
+        // Close tugmasi bosilganda
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            closePopup();
+          });
+        }
+        
+        // Overlay (qoraygan joy) bosilganda yopish
+        popup.addEventListener('click', function(e) {
+          if (e.target === popup) {
+            closePopup();
+          }
+        });
+        
+        // ESC tugmasi bosilganda yopish
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && popup.classList.contains('active')) {
+            closePopup();
+          }
+        });
+        
+        // Formani yuklash
+        function loadForm() {
+          console.log('Loading amoCRM form...');
+          
+          // Eski skriptlarni tozalash
+          document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]').forEach(s => s.remove());
+          
+          // Konfiguratsiya skripti
+          const configScript = document.createElement('script');
+          configScript.innerHTML = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
+          document.body.appendChild(configScript);
+          
+          // Asosiy form skripti
+          const formScript = document.createElement('script');
+          formScript.id = "amoforms_script_1676490";
+          formScript.async = true;
+          formScript.charset = "utf-8";
+          formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
+          
+          formScript.onload = function() {
+            console.log('✅ Form loaded successfully');
+            window.formLoaded = true;
+            loading.style.display = 'none';
+          };
+          
+          formScript.onerror = function() {
+            console.error('❌ Form failed to load');
+            loading.innerHTML = '<p style="color: #e74c3c">Formani yuklashda xatolik. Qayta urinib ko\'ring.</p>';
+          };
+          
+          document.body.appendChild(formScript);
+        }
+        
+        console.log('Popup initialized - closed by default');
+      })();
     </script>
     
     <script type="module" src="/src/main.jsx"></script>
