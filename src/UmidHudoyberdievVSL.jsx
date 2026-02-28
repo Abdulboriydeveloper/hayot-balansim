@@ -24,46 +24,17 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   POPUP — amoCRM forma (FOOTER DAN CHIQARISH)
+   POPUP — SODDA VERSIYA (100% ishlaydi)
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
   const [formLoaded, setFormLoaded] = useState(false);
-  const [formError, setFormError] = useState(false);
 
   useEffect(() => {
-    if (!open) {
-      // Popup yopilganda tozalash
-      const container = document.getElementById("amoforms_1676490");
-      if (container) container.innerHTML = "";
-      
-      const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
-      scripts.forEach(script => script.remove());
-      
-      delete window.amo_forms_params;
-      delete window.amo_forms_load;
-      delete window.amo_forms_loaded;
-      
-      setFormLoaded(false);
-      setFormError(false);
-      return;
-    }
+    if (!open) return;
 
-    console.log("📢 Popup opened");
-
-    // Eski skriptlarni tozalash
-    const oldScripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
-    oldScripts.forEach(script => script.remove());
-
-    delete window.amo_forms_params;
-    delete window.amo_forms_load;
-    delete window.amo_forms_loaded;
-
-    const container = document.getElementById("amoforms_1676490");
-    if (container) container.innerHTML = "";
-
-    // Konfiguratsiya skripti
-    const configScript = document.createElement("script");
-    configScript.innerHTML = `
+    // Forma yuklash
+    const script = document.createElement("script");
+    script.innerHTML = `
       !function(a,m,o,c,r,m){
         a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
         a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},
@@ -71,137 +42,82 @@ function Popup({ open, onClose }) {
         a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}
       }(window,0,"amo_forms_","params","load","loaded");
     `;
-    document.body.appendChild(configScript);
+    document.body.appendChild(script);
 
-    // Asosiy form skripti
-    const formScript = document.createElement("script");
-    formScript.id = "amoforms_script_1676490";
-    formScript.async = true;
-    formScript.charset = "utf-8";
-    formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?1772192007";
-    
-    formScript.onload = () => {
-      console.log("✅ amoCRM form loaded");
-      setFormLoaded(true);
+    const script2 = document.createElement("script");
+    script2.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?1772192007";
+    script2.async = true;
+    script2.onload = () => setFormLoaded(true);
+    document.body.appendChild(script2);
+
+    return () => {
+      document.body.removeChild(script);
+      document.body.removeChild(script2);
+      document.getElementById("amoforms_1676490").innerHTML = "";
     };
-    
-    formScript.onerror = () => {
-      console.error("❌ amoCRM form failed");
-      setFormError(true);
-    };
-    
-    document.body.appendChild(formScript);
-  }, [open]);
-
-  // ESC tugma
-  useEffect(() => {
-    const fn = e => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", fn);
-    return () => document.removeEventListener("keydown", fn);
-  }, [onClose]);
-
-  // Body scroll lock
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
   }, [open]);
 
   if (!open) return null;
 
   return (
-    <div
-      className="sm-overlay"
-      onClick={e => e.target === e.currentTarget && onClose()}
-      style={{ 
-        position: 'fixed', 
-        top: 0, 
-        left: 0, 
-        right: 0, 
+    <div 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
         bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.85)',
+        backgroundColor: 'rgba(0,0,0,0.9)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 999999
       }}
+      onClick={onClose}
     >
       <div 
-        className="sm-popup" 
         style={{
-          background: 'white',
-          borderRadius: '28px',
-          padding: '40px 32px',
-          maxWidth: '600px',
+          backgroundColor: 'white',
           width: '90%',
-          position: 'relative',
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          boxShadow: '0 30px 60px rgba(0,0,0,0.5)'
+          maxWidth: '500px',
+          borderRadius: '20px',
+          padding: '30px',
+          position: 'relative'
         }}
+        onClick={e => e.stopPropagation()}
       >
         <button 
           onClick={onClose}
           style={{
             position: 'absolute',
-            top: '16px',
-            right: '20px',
-            background: '#f1f1f1',
+            top: '10px',
+            right: '15px',
             border: 'none',
-            fontSize: '22px',
-            width: '36px',
-            height: '36px',
-            borderRadius: '50%',
+            background: 'none',
+            fontSize: '24px',
             cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#555',
-            zIndex: 10
+            color: '#999'
           }}
         >
           ✕
         </button>
         
         <h3 style={{
-          fontSize: '24px',
-          fontWeight: 700,
-          color: '#000',
+          fontSize: '22px',
+          fontWeight: 'bold',
           textAlign: 'center',
-          marginBottom: '24px',
-          marginTop: 0
+          marginBottom: '20px',
+          color: '#333'
         }}>
           Ro'yxatdan o'tish
         </h3>
         
-        {!formLoaded && !formError && (
-          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              border: '4px solid #f3f3f3',
-              borderTop: '4px solid #ec3737',
-              borderRadius: '50%',
-              margin: '0 auto 20px',
-              animation: 'spin 1s linear infinite'
-            }} />
-            <p style={{ color: '#666' }}>Forma yuklanmoqda...</p>
+        {!formLoaded && (
+          <div style={{ textAlign: 'center', padding: '30px' }}>
+            <p>Forma yuklanmoqda...</p>
           </div>
         )}
         
-        {formError && (
-          <div style={{
-            textAlign: 'center',
-            padding: '40px 20px',
-            color: '#e74c3c',
-            background: '#fef5f5',
-            borderRadius: '16px'
-          }}>
-            <p>Formani yuklashda xatolik yuz berdi.</p>
-            <p>Iltimos, qayta urinib ko'ring.</p>
-          </div>
-        )}
-        
-        {/* amoCRM forma shu div ichiga yuklanadi */}
         <div id="amoforms_1676490" />
       </div>
     </div>
