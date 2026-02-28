@@ -19,9 +19,9 @@ const CREDS = [
   { t: "4 yil ichida 34,000+ tadan ortiq o'quvchilarimga shaxsiy rivojlanishga yordam bergan", gold: false },
 ];
 
-// ODDIY FUNKSIYA - faqat linkga o'tadi
-function goToForm() {
-  window.location.href = "https://forms.amocrm.ru/rczcdxl";
+// YANGI OYNADA OCHISH
+function openFormInNewTab() {
+  window.open("https://forms.amocrm.ru/rczcdxl", "_blank");
 }
 
 function InstaBadge() {
@@ -62,11 +62,11 @@ function Hero() {
           <p className="sm-hero-sub sfu d2">
             Qanday qilib xotirangizni 10 barobarga kuchaytirish va istalgan ma'lumotlarni eslab qolish mumkin?
           </p>
-          <button className="sm-btn sfu d3" onClick={goToForm}>
+          <button className="sm-btn sfu d3" onClick={openFormInNewTab}>
             Ro'yxatdan o'tish
           </button>
           <div className="sfu d4">
-            <CtaLink onClick={goToForm} />
+            <CtaLink onClick={openFormInNewTab} />
           </div>
         </div>
       </div>
@@ -93,8 +93,8 @@ function Benefits() {
           <div className="sm-card red"><div className="sm-card-imgbox tall"><img src={card5} alt="Sirli bonuslar" /></div><div className="sm-card-body"><p>Hech qayerda berilmagan<br /><strong>sirli bonuslar</strong> (sizga yoqishi aniq)</p></div></div>
         </div>
         <div className="sm-bcta">
-          <button className="sm-btn" onClick={goToForm}>Ro'yxatdan o'tish</button>
-          <CtaLink onClick={goToForm} />
+          <button className="sm-btn" onClick={openFormInNewTab}>Ro'yxatdan o'tish</button>
+          <CtaLink onClick={openFormInNewTab} />
         </div>
       </div>
     </section>
@@ -115,8 +115,8 @@ function Author() {
           <div className="sm-author-right">
             <img className="sm-author-photo" src={authorPhoto} alt="Umidjon Hudoyberdiev" />
             <div className="sm-author-cta">
-              <button className="sm-btn" onClick={goToForm}>Ro'yxatdan o'tish</button>
-              <CtaLink onClick={goToForm} />
+              <button className="sm-btn" onClick={openFormInNewTab}>Ro'yxatdan o'tish</button>
+              <CtaLink onClick={openFormInNewTab} />
             </div>
           </div>
         </div>
