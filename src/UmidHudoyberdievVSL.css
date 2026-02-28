@@ -11,106 +11,14 @@ html, body {
   -webkit-font-smoothing:antialiased;
 }
 
-/* amoCRM iframe popup */
-.sm-popup-iframe {
-  padding: 48px 8px 8px;
-  background: #fff;
-  max-width: 540px;
-  overflow: hidden;
-}
-
-.sm-amo-iframe {
-  width: 100%;
-  height: 420px;
-  border: none;
-  border-radius: 16px;
-  display: block;
-}
-
-/* amoCRM embed popup — kengaytirilgan */
-.sm-popup-amo {
-  padding: 40px 32px 32px;
-  min-width: 360px;
-  max-width: 520px;
-}
-.sm-popup-amo #amoforms_1676490 {
-  min-height: 200px;
-}
-/* amoCRM formaning o'z stillarini override qilish */
-.sm-popup-amo .amoforms__holder { box-shadow: none !important; padding: 0 !important; }
-
 /* ══════════════════════════════════
    POPUP
 ══════════════════════════════════ */
-.sm-overlay {
-  display:none; position:fixed; inset:0; z-index:9999;
-  background:rgba(0,0,0,0.82);
-  align-items:center; justify-content:center;
-  padding:16px;
-}
-.sm-overlay.open { display:flex; }
 
-.sm-popup {
-  background:#fff; border-radius:24px; padding:40px 32px;
-  width:100%; max-width:460px; position:relative;
-  animation:popIn .25s ease;
-}
 @keyframes popIn {
   from { opacity:0; transform:scale(.93) translateY(10px); }
   to   { opacity:1; transform:scale(1)  translateY(0); }
 }
-.sm-popup-close {
-  position:absolute; top:14px; right:16px;
-  background:none; border:none; font-size:20px;
-  cursor:pointer; color:#888; line-height:1;
-  padding:4px 8px; border-radius:6px;
-  transition:color .15s;
-}
-.sm-popup-close:hover { color:#111; }
-
-.sm-popup-title {
-  font-size:18px; font-weight:700; color:#111;
-  text-align:center; margin-bottom:24px; line-height:1.4;
-}
-.sm-label {
-  display:block; font-size:13px; font-weight:600;
-  color:#555; margin-bottom:6px;
-}
-.sm-inp {
-  width:100%; border:1.5px solid #ddd; border-radius:10px;
-  padding:13px 14px; font-size:15px; color:#111;
-  margin-bottom:14px; outline:none;
-  transition:border-color .2s;
-  font-family:inherit;
-}
-.sm-inp:focus { border-color:#e8b84b; }
-
-.sm-phone-wrap {
-  display:flex; border:1.5px solid #ddd; border-radius:10px;
-  overflow:hidden; margin-bottom:24px;
-  transition:border-color .2s;
-}
-.sm-phone-wrap:focus-within { border-color:#e8b84b; }
-.sm-phone-code {
-  background:#f7f7f7; padding:13px 12px;
-  font-size:13px; font-weight:600; color:#444;
-  border-right:1.5px solid #ddd;
-  display:flex; align-items:center; gap:5px; white-space:nowrap;
-  flex-shrink:0;
-}
-.sm-phone-inp {
-  flex:1; border:none; padding:13px 12px;
-  font-size:15px; color:#111; outline:none;
-  font-family:inherit; min-width:0;
-}
-.sm-submit {
-  width:100%; padding:16px; background:#ec3737; color:#fff;
-  font-family:inherit; font-weight:700; font-size:16px;
-  border:none; border-radius:12px; cursor:pointer;
-  letter-spacing:.5px; transition:opacity .2s, transform .15s;
-}
-.sm-submit:hover  { opacity:.9; }
-.sm-submit:active { transform:scale(.98); }
 
 /* ══════════════════════════════════
    HERO

@@ -24,7 +24,7 @@ const CREDS = [
 ];
 
 /* ─────────────────────────────────────────────
-   POPUP — amoCRM forma (JavaScript orqali)
+   POPUP — amoCRM forma (FOOTER DAN CHIQARISH)
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
   const [formLoaded, setFormLoaded] = useState(false);
@@ -32,11 +32,10 @@ function Popup({ open, onClose }) {
 
   useEffect(() => {
     if (!open) {
-      // Popup yopilganda formani tozalash
+      // Popup yopilganda tozalash
       const container = document.getElementById("amoforms_1676490");
       if (container) container.innerHTML = "";
       
-      // Skriptlarni tozalash
       const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
       scripts.forEach(script => script.remove());
       
@@ -49,22 +48,20 @@ function Popup({ open, onClose }) {
       return;
     }
 
-    console.log("📢 Popup opened, loading amoCRM form...");
+    console.log("📢 Popup opened");
 
     // Eski skriptlarni tozalash
     const oldScripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
     oldScripts.forEach(script => script.remove());
 
-    // amoCRM global obyektlarini tozalash
     delete window.amo_forms_params;
     delete window.amo_forms_load;
     delete window.amo_forms_loaded;
 
-    // Form container ni tozalash
     const container = document.getElementById("amoforms_1676490");
     if (container) container.innerHTML = "";
 
-    // 1. Konfiguratsiya skripti (SIZNING KODINGIZ)
+    // Konfiguratsiya skripti
     const configScript = document.createElement("script");
     configScript.innerHTML = `
       !function(a,m,o,c,r,m){
@@ -76,7 +73,7 @@ function Popup({ open, onClose }) {
     `;
     document.body.appendChild(configScript);
 
-    // 2. Asosiy form skripti (SIZNING KODINGIZ)
+    // Asosiy form skripti
     const formScript = document.createElement("script");
     formScript.id = "amoforms_script_1676490";
     formScript.async = true;
@@ -84,24 +81,16 @@ function Popup({ open, onClose }) {
     formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?1772192007";
     
     formScript.onload = () => {
-      console.log("✅ amoCRM form loaded successfully");
+      console.log("✅ amoCRM form loaded");
       setFormLoaded(true);
-      setFormError(false);
     };
     
     formScript.onerror = () => {
-      console.error("❌ amoCRM form failed to load");
+      console.error("❌ amoCRM form failed");
       setFormError(true);
-      setFormLoaded(false);
     };
     
     document.body.appendChild(formScript);
-
-    // Cleanup
-    return () => {
-      const scripts = document.querySelectorAll('script[id*="amoforms"], script[src*="amoforms"]');
-      scripts.forEach(script => script.remove());
-    };
   }, [open]);
 
   // ESC tugma
@@ -121,28 +110,94 @@ function Popup({ open, onClose }) {
 
   return (
     <div
-      className="sm-overlay open"
+      className="sm-overlay"
       onClick={e => e.target === e.currentTarget && onClose()}
+      style={{ 
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        right: 0, 
+        bottom: 0,
+        backgroundColor: 'rgba(0,0,0,0.85)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 999999
+      }}
     >
-      <div className="sm-popup sm-popup-amo" role="dialog" aria-modal="true">
-        <button className="sm-popup-close" onClick={onClose}>✕</button>
+      <div 
+        className="sm-popup" 
+        style={{
+          background: 'white',
+          borderRadius: '28px',
+          padding: '40px 32px',
+          maxWidth: '600px',
+          width: '90%',
+          position: 'relative',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          boxShadow: '0 30px 60px rgba(0,0,0,0.5)'
+        }}
+      >
+        <button 
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '20px',
+            background: '#f1f1f1',
+            border: 'none',
+            fontSize: '22px',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#555',
+            zIndex: 10
+          }}
+        >
+          ✕
+        </button>
         
-        <h3 className="sm-popup-title">Ro'yxatdan o'tish</h3>
+        <h3 style={{
+          fontSize: '24px',
+          fontWeight: 700,
+          color: '#000',
+          textAlign: 'center',
+          marginBottom: '24px',
+          marginTop: 0
+        }}>
+          Ro'yxatdan o'tish
+        </h3>
         
         {!formLoaded && !formError && (
-          <div className="sm-form-loading">
-            <div className="spinner"></div>
-            <p>Forma yuklanmoqda...</p>
+          <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+            <div style={{
+              width: '48px',
+              height: '48px',
+              border: '4px solid #f3f3f3',
+              borderTop: '4px solid #ec3737',
+              borderRadius: '50%',
+              margin: '0 auto 20px',
+              animation: 'spin 1s linear infinite'
+            }} />
+            <p style={{ color: '#666' }}>Forma yuklanmoqda...</p>
           </div>
         )}
         
         {formError && (
-          <div className="sm-form-error">
+          <div style={{
+            textAlign: 'center',
+            padding: '40px 20px',
+            color: '#e74c3c',
+            background: '#fef5f5',
+            borderRadius: '16px'
+          }}>
             <p>Formani yuklashda xatolik yuz berdi.</p>
-            <p>Iltimos, qayta urinib ko'ring yoki telefon orqali bog'lanib: +998 78 113 90 90</p>
-            <button className="sm-retry-btn" onClick={onClose}>
-              Yopish
-            </button>
+            <p>Iltimos, qayta urinib ko'ring.</p>
           </div>
         )}
         
