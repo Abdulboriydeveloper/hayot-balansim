@@ -27,6 +27,7 @@ const CREDS = [
    POPUP — amoCRM forma iframe orqali
 ───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
+  const [iframeError, setIframeError] = useState(false);
 
   // ESC tugma
   useEffect(() => {
@@ -50,11 +51,30 @@ function Popup({ open, onClose }) {
     >
       <div className="sm-popup sm-popup-iframe" role="dialog" aria-modal="true">
         <button className="sm-popup-close" onClick={onClose}>✕</button>
+        
+        {iframeError && (
+          <div className="sm-form-error">
+            <p>Formani yuklashda xatolik yuz berdi.</p>
+            <p>Iltimos, qayta urinib ko'ring yoki telefon orqali bog'lanib: +998 78 113 90 90</p>
+            <button className="sm-retry-btn" onClick={() => window.location.reload()}>
+              Qayta urinish
+            </button>
+          </div>
+        )}
+        
         <iframe
-          src="https://forms.amocrm.ru/form/16f5e64433d629247:1"
+          src="https://forms.amocrm.ru/forms/embed/1676490"
           frameBorder="0"
           className="sm-amo-iframe"
           title="Ro'yxatdan o'tish"
+          onLoad={() => {
+            console.log("Iframe loaded successfully");
+            setIframeError(false);
+          }}
+          onError={() => {
+            console.error("Iframe failed to load");
+            setIframeError(true);
+          }}
         />
       </div>
     </div>
