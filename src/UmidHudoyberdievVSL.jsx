@@ -26,15 +26,21 @@ const CREDS = [
 /* ─────────────────────────────────────────────
    POPUP — SODDA VERSIYA (100% ishlaydi)
 ───────────────────────────────────────────── */
+/* ─────────────────────────────────────────────
+   POPUP — AMOCRM FORM TO‘G‘RI POPUP ICHIDA
+───────────────────────────────────────────── */
 function Popup({ open, onClose }) {
   const [formLoaded, setFormLoaded] = useState(false);
 
   useEffect(() => {
     if (!open) return;
 
-    // Forma yuklash
-    const script = document.createElement("script");
-    script.innerHTML = `
+    setFormLoaded(false);
+
+    // 🔹 amoCRM init
+    const initScript = document.createElement("script");
+    initScript.id = "amo-init";
+    initScript.innerHTML = `
       !function(a,m,o,c,r,m){
         a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},
         a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},
@@ -42,83 +48,110 @@ function Popup({ open, onClose }) {
         a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}
       }(window,0,"amo_forms_","params","load","loaded");
     `;
-    document.body.appendChild(script);
+    document.body.appendChild(initScript);
 
-    const script2 = document.createElement("script");
-    script2.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?1772192007";
-    script2.async = true;
-    script2.onload = () => setFormLoaded(true);
-    document.body.appendChild(script2);
+    // 🔹 amoCRM core
+    const coreScript = document.createElement("script");
+    coreScript.id = "amo-core";
+    coreScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js";
+    coreScript.async = true;
+
+    coreScript.onload = () => {
+      const tryMoveForm = () => {
+        const form = document.getElementById("amoforms_1676490");
+        const mount = document.getElementById("amoforms_mount");
+
+        if (form && mount && !mount.contains(form)) {
+          mount.appendChild(form);
+          setFormLoaded(true);
+          return true;
+        }
+        return false;
+      };
+
+      // amoCRM kech chiqishi mumkin → bir necha marta urinamiz
+      const interval = setInterval(() => {
+        if (tryMoveForm()) clearInterval(interval);
+      }, 200);
+
+      setTimeout(() => clearInterval(interval), 3000);
+    };
+
+    document.body.appendChild(coreScript);
 
     return () => {
-      document.body.removeChild(script);
-      document.body.removeChild(script2);
-      document.getElementById("amoforms_1676490").innerHTML = "";
+      const init = document.getElementById("amo-init");
+      const core = document.getElementById("amo-core");
+      const form = document.getElementById("amoforms_1676490");
+
+      if (init) init.remove();
+      if (core) core.remove();
+      if (form) form.remove();
     };
   }, [open]);
 
   if (!open) return null;
 
   return (
-    <div 
+    <div
+      onClick={onClose}
       style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.9)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "rgba(0,0,0,0.9)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         zIndex: 999999
       }}
-      onClick={onClose}
     >
-      <div 
+      <div
+        onClick={(e) => e.stopPropagation()}
         style={{
-          backgroundColor: 'white',
-          width: '90%',
-          maxWidth: '500px',
-          borderRadius: '20px',
-          padding: '30px',
-          position: 'relative'
+          backgroundColor: "#fff",
+          width: "90%",
+          maxWidth: "500px",
+          borderRadius: "20px",
+          padding: "30px",
+          position: "relative"
         }}
-        onClick={e => e.stopPropagation()}
       >
-        <button 
+        <button
           onClick={onClose}
           style={{
-            position: 'absolute',
-            top: '10px',
-            right: '15px',
-            border: 'none',
-            background: 'none',
-            fontSize: '24px',
-            cursor: 'pointer',
-            color: '#999'
+            position: "absolute",
+            top: "10px",
+            right: "15px",
+            border: "none",
+            background: "none",
+            fontSize: "24px",
+            cursor: "pointer",
+            color: "#999"
           }}
         >
           ✕
         </button>
-        
-        <h3 style={{
-          fontSize: '22px',
-          fontWeight: 'bold',
-          textAlign: 'center',
-          marginBottom: '20px',
-          color: '#333'
-        }}>
+
+        <h3
+          style={{
+            fontSize: "22px",
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: "20px",
+            color: "#333"
+          }}
+        >
           Ro'yxatdan o'tish
         </h3>
-        
+
         {!formLoaded && (
-          <div style={{ textAlign: 'center', padding: '30px' }}>
+          <div style={{ textAlign: "center", padding: "30px" }}>
             <p>Forma yuklanmoqda...</p>
           </div>
         )}
-        
-        <div id="amoforms_1676490" />
+
+        {/* 🔥 AMOCRM FORM FAQAT SHU YERGA TUSHADI */}
+        <div id="amoforms_mount" />
       </div>
     </div>
   );
