@@ -13,7 +13,7 @@
         box-sizing: border-box;
       }
       
-      /* Popup overlay - qoraygan joy */
+      /* Popup overlay */
       .popup-overlay {
         display: none;
         position: fixed;
@@ -31,7 +31,7 @@
         display: flex;
       }
       
-      /* Popup container - oq quti */
+      /* Popup container */
       .popup-container {
         background-color: #ffffff;
         width: 90%;
@@ -45,7 +45,7 @@
         overflow-y: auto;
       }
       
-      /* Close tugmasi - KATTA VA KO'RINARLI */
+      /* Close tugmasi */
       .popup-close {
         position: absolute;
         top: 15px;
@@ -71,10 +71,6 @@
         background-color: #e0e0e0;
         transform: scale(1.1);
         color: #000;
-      }
-      
-      .popup-close:active {
-        transform: scale(0.95);
       }
       
       .popup-title {
@@ -115,7 +111,6 @@
         margin-top: 10px;
       }
       
-      /* Animatsiyalar */
       @keyframes popupFadeIn {
         from {
           opacity: 0;
@@ -132,18 +127,14 @@
         100% { transform: rotate(360deg); }
       }
       
-      /* Mobil versiya */
       @media (max-width: 600px) {
         .popup-container {
           padding: 30px 20px 25px;
           width: 95%;
         }
-        
         .popup-title {
           font-size: 20px;
-          margin-bottom: 20px;
         }
-        
         .popup-close {
           top: 12px;
           right: 15px;
@@ -151,35 +142,13 @@
           height: 38px;
           font-size: 22px;
         }
-        
-        #amoforms_1676490 {
-          min-height: 400px;
-        }
-      }
-      
-      @media (max-width: 400px) {
-        .popup-container {
-          padding: 25px 15px 20px;
-        }
-        
-        .popup-title {
-          font-size: 18px;
-        }
-        
-        .popup-close {
-          top: 10px;
-          right: 12px;
-          width: 34px;
-          height: 34px;
-          font-size: 20px;
-        }
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
     
-    <!-- Popup - HTMLda tayyor, lekin ko'rinmaydi -->
+    <!-- Popup -->
     <div id="popupOverlay" class="popup-overlay">
       <div class="popup-container">
         <button id="popupCloseBtn" class="popup-close">✕</button>
@@ -196,26 +165,49 @@
 
     <script>
       (function() {
-        // DOM elementlar
         const overlay = document.getElementById('popupOverlay');
         const closeBtn = document.getElementById('popupCloseBtn');
         const loading = document.getElementById('popupLoading');
+        const formContainer = document.getElementById('amoforms_1676490');
         
-        // Popup ochish funksiyasi - global qilamiz
+        // Popup ochish
         window.openPopup = function() {
           console.log('📢 Opening popup');
           overlay.classList.add('active');
           document.body.style.overflow = 'hidden';
           
-          // Formani yuklash (faqat bir marta)
           if (!window.amoFormLoaded) {
             loadAmoForm();
+          } else {
+            // Forma allaqachon yuklangan
+            loading.style.display = 'none';
           }
         };
         
-        // Popup yopish funksiyasi
+        // Popup yopish - FORMA BUTUNLAY YO'QOLADI
         function closePopup() {
           console.log('🔒 Closing popup');
+          
+          // Formani butunlay tozalash
+          if (formContainer) {
+            formContainer.innerHTML = '';
+          }
+          
+          // amoCRM global obyektlarini tozalash
+          delete window.amo_forms_params;
+          delete window.amo_forms_load;
+          delete window.amo_forms_loaded;
+          
+          // Eski skriptlarni o'chirish
+          document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]').forEach(s => s.remove());
+          
+          // Yuklanganlik flagini reset qilish
+          window.amoFormLoaded = false;
+          
+          // Loading ni qayta ko'rsatish
+          loading.style.display = 'block';
+          
+          // Popupni yopish
           overlay.classList.remove('active');
           document.body.style.overflow = '';
         }
@@ -229,7 +221,7 @@
           });
         }
         
-        // Overlay (qoraygan joy) bosilganda yopish
+        // Overlay bosilganda
         if (overlay) {
           overlay.addEventListener('click', function(e) {
             if (e.target === overlay) {
@@ -252,6 +244,11 @@
           // Eski skriptlarni tozalash
           document.querySelectorAll('script[src*="amoforms"], script[id*="amo"]').forEach(s => s.remove());
           
+          // Form container ni tozalash
+          if (formContainer) {
+            formContainer.innerHTML = '';
+          }
+          
           // Konfiguratsiya skripti
           const configScript = document.createElement('script');
           configScript.innerHTML = `!function(a,m,o,c,r,m){a[o+c]=a[o+c]||{setMeta:function(p){this.params=(this.params||[]).concat([p])}},a[o+r]=a[o+r]||function(f){a[o+r].f=(a[o+r].f||[]).concat([f])},a[o+r]({id:"1676490",hash:"f09e3d886b18ad916f5e64433d629247",locale:"ru"}),a[o+m]=a[o+m]||function(f,k){a[o+m].f=(a[o+m].f||[]).concat([[f,k]])}}(window,0,"amo_forms_","params","load","loaded");`;
@@ -265,20 +262,20 @@
           formScript.src = "https://forms.amocrm.ru/forms/assets/js/amoforms.js?t=" + Date.now();
           
           formScript.onload = function() {
-            console.log('✅ amoCRM form loaded successfully');
+            console.log('✅ amoCRM form loaded');
             window.amoFormLoaded = true;
             loading.style.display = 'none';
           };
           
           formScript.onerror = function() {
-            console.error('❌ Failed to load amoCRM form');
-            loading.innerHTML = '<p style="color: #e74c3c">Formani yuklashda xatolik. Qayta urinib ko\'ring.</p>';
+            console.error('❌ Failed to load form');
+            loading.innerHTML = '<p style="color: #e74c3c">Xatolik yuz berdi. Qayta urinib ko\'ring.</p>';
           };
           
           document.body.appendChild(formScript);
         }
         
-        console.log('✅ Popup initialized - closed by default');
+        console.log('✅ Popup ready');
       })();
     </script>
     
