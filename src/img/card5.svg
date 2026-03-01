@@ -1,0 +1,100 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="100%" stop-color="#dcfce7"/>
+    </radialGradient>
+    <radialGradient id="coinGrad" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </radialGradient>
+    <radialGradient id="coin2Grad" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="400" height="300" fill="url(#bgGrad)" rx="16"/>
+
+  <!-- Islamic geometric pattern border (top) -->
+  <g opacity="0.12" fill="#15803d">
+    <!-- Repeating geometric diamonds -->
+    <polygon points="20,8 28,16 20,24 12,16" /><polygon points="48,8 56,16 48,24 40,16"/>
+    <polygon points="76,8 84,16 76,24 68,16" /><polygon points="104,8 112,16 104,24 96,16"/>
+    <polygon points="132,8 140,16 132,24 124,16"/><polygon points="160,8 168,16 160,24 152,16"/>
+    <polygon points="188,8 196,16 188,24 180,16"/><polygon points="216,8 224,16 216,24 208,16"/>
+    <polygon points="244,8 252,16 244,24 236,16"/><polygon points="272,8 280,16 272,24 264,16"/>
+    <polygon points="300,8 308,16 300,24 292,16"/><polygon points="328,8 336,16 328,24 320,16"/>
+    <polygon points="356,8 364,16 356,24 348,16"/><polygon points="384,8 392,16 384,24 376,16"/>
+  </g>
+
+  <!-- SCALES OF JUSTICE (Mizan) — Islamic finance symbol -->
+  <!-- Center pole -->
+  <rect x="196" y="72" width="8" height="130" fill="#15803d" rx="4"/>
+  <!-- Top ornament -->
+  <polygon points="200,62 192,75 208,75" fill="#d97706"/>
+  <circle cx="200" cy="58" r="8" fill="#d97706"/>
+  <circle cx="200" cy="58" r="4" fill="#fbbf24"/>
+
+  <!-- Balance beam -->
+  <rect x="108" y="94" width="184" height="8" fill="#15803d" rx="4"/>
+
+  <!-- Left chain -->
+  <line x1="128" y1="102" x2="118" y2="138" stroke="#15803d" stroke-width="2.5" stroke-dasharray="5,3"/>
+  <!-- Right chain -->
+  <line x1="272" y1="102" x2="282" y2="138" stroke="#15803d" stroke-width="2.5" stroke-dasharray="5,3"/>
+
+  <!-- Left pan -->
+  <path d="M88 138 Q118 148 148 138" stroke="#15803d" stroke-width="3" fill="none"/>
+  <path d="M88 138 Q118 162 148 138" fill="#d1fae5" stroke="#15803d" stroke-width="2"/>
+  <!-- Right pan -->
+  <path d="M252 138 Q282 148 312 138" stroke="#15803d" stroke-width="3" fill="none"/>
+  <path d="M252 138 Q282 162 312 138" fill="#d1fae5" stroke="#15803d" stroke-width="2"/>
+
+  <!-- Left pan: Gold coins stack -->
+  <ellipse cx="118" cy="155" rx="22" ry="7" fill="url(#coinGrad)" stroke="#b45309" stroke-width="1.5"/>
+  <rect x="96" y="143" width="44" height="12" fill="url(#coinGrad)"/>
+  <ellipse cx="118" cy="143" rx="22" ry="7" fill="url(#coin2Grad)" stroke="#b45309" stroke-width="1.5"/>
+  <rect x="96" y="132" width="44" height="11" fill="url(#coin2Grad)"/>
+  <ellipse cx="118" cy="132" rx="22" ry="7" fill="#fde68a" stroke="#b45309" stroke-width="1.5"/>
+  <text x="118" y="136" text-anchor="middle" fill="#92400e" font-size="9" font-weight="bold">$</text>
+
+  <!-- Right pan: House/halal asset -->
+  <!-- House -->
+  <rect x="264" y="142" width="36" height="24" fill="#bbf7d0" stroke="#15803d" stroke-width="1.5" rx="2"/>
+  <polygon points="264,142 282,125 300,142" fill="#16a34a" stroke="#15803d" stroke-width="1.5"/>
+  <!-- Door -->
+  <rect x="275" y="154" width="10" height="12" fill="#15803d" rx="2"/>
+  <!-- Window -->
+  <rect x="267" y="146" width="8" height="8" fill="#fbbf24" rx="1"/>
+  <rect x="289" y="146" width="8" height="8" fill="#fbbf24" rx="1"/>
+
+  <!-- Arabic text: لا ربا (No Riba) -->
+  <rect x="144" y="200" width="112" height="30" fill="#15803d" rx="15"/>
+  <text x="200" y="221" text-anchor="middle" fill="white" font-size="15" font-family="serif" font-weight="bold">لا ربا</text>
+
+  <!-- "No Riba" label below -->
+  <text x="200" y="252" text-anchor="middle" fill="#15803d" font-size="11" font-family="Inter,sans-serif" font-weight="600">Foizsiz moliya • Halol investitsiya</text>
+
+  <!-- Islamic star pattern corners -->
+  <text x="30"  y="275" font-size="22" fill="#15803d" opacity="0.2">✦</text>
+  <text x="348" y="275" font-size="22" fill="#15803d" opacity="0.2">✦</text>
+
+  <!-- Crescent moon top right -->
+  <path d="M355 35 Q375 45 365 68 Q385 55 375 35 Q368 28 355 35 Z" fill="#d97706" opacity="0.8"/>
+  <circle cx="343" cy="30" r="5" fill="#fbbf24" opacity="0.6"/>
+  <circle cx="360" cy="20" r="3" fill="#fbbf24" opacity="0.4"/>
+  <circle cx="375" cy="25" r="2" fill="#fbbf24" opacity="0.4"/>
+
+  <!-- Bottom geometric border -->
+  <g opacity="0.12" fill="#15803d">
+    <polygon points="20,292 28,284 36,292 28,300"/><polygon points="48,292 56,284 64,292 56,300"/>
+    <polygon points="76,292 84,284 92,292 84,300"/><polygon points="104,292 112,284 120,292 112,300"/>
+    <polygon points="132,292 140,284 148,292 140,300"/><polygon points="160,292 168,284 176,292 168,300"/>
+    <polygon points="188,292 196,284 204,292 196,300"/><polygon points="216,292 224,284 232,292 224,300"/>
+    <polygon points="244,292 252,284 260,292 252,300"/><polygon points="272,292 280,284 288,292 280,300"/>
+    <polygon points="300,292 308,284 316,292 308,300"/><polygon points="328,292 336,284 344,292 336,300"/>
+    <polygon points="356,292 364,284 372,292 364,300"/>
+  </g>
+</svg>

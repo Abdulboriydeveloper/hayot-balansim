@@ -1,0 +1,59 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#fefce8" rx="16"/>
+
+  <!-- Calendar base -->
+  <rect x="70" y="45" width="260" height="210" fill="#fff" rx="14" stroke="#fde68a" stroke-width="2"/>
+  <!-- Calendar header -->
+  <rect x="70" y="45" width="260" height="48" fill="#f59e0b" rx="14"/>
+  <rect x="70" y="75" width="260" height="18" fill="#f59e0b"/>
+  <text x="200" y="75" text-anchor="middle" fill="white" font-size="16" font-family="Inter,sans-serif" font-weight="700">1 OYLIK REJA</text>
+  
+  <!-- Calendar rings -->
+  <rect x="115" y="35" width="10" height="22" fill="#d97706" rx="5"/>
+  <rect x="155" y="35" width="10" height="22" fill="#d97706" rx="5"/>
+  <rect x="195" y="35" width="10" height="22" fill="#d97706" rx="5"/>
+  <rect x="235" y="35" width="10" height="22" fill="#d97706" rx="5"/>
+  <rect x="275" y="35" width="10" height="22" fill="#d97706" rx="5"/>
+
+  <!-- Week days -->
+  <text x="102" y="115" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter,sans-serif" font-weight="600">D</text>
+  <text x="140" y="115" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter,sans-serif" font-weight="600">S</text>
+  <text x="178" y="115" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter,sans-serif" font-weight="600">CH</text>
+  <text x="218" y="115" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter,sans-serif" font-weight="600">P</text>
+  <text x="256" y="115" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter,sans-serif" font-weight="600">J</text>
+  <text x="294" y="115" text-anchor="middle" fill="#9ca3af" font-size="11" font-family="Inter,sans-serif" font-weight="600">SH</text>
+
+  <!-- Calendar days row 1 -->
+  <text x="102" y="143" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">1</text>
+  <text x="140" y="143" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">2</text>
+  <text x="178" y="143" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">3</text>
+  <circle cx="218" cy="136" r="13" fill="#f59e0b"/>
+  <text x="218" y="141" text-anchor="middle" fill="white" font-size="14" font-family="Inter,sans-serif" font-weight="700">4</text>
+  <text x="256" y="143" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">5</text>
+  <text x="294" y="143" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">6</text>
+
+  <!-- Row 2 -->
+  <text x="102" y="173" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">7</text>
+  <text x="140" y="173" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">8</text>
+  <text x="178" y="173" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">9</text>
+  <text x="218" y="173" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">10</text>
+  <text x="256" y="173" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">11</text>
+  <text x="294" y="173" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">12</text>
+
+  <!-- Row 3 with checkmarks -->
+  <text x="102" y="203" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">13</text>
+  <text x="140" y="203" text-anchor="middle" fill="#374151" font-size="14" font-family="Inter,sans-serif">14</text>
+  <rect x="163" y="191" width="30" height="20" fill="#dcfce7" rx="5"/>
+  <text x="178" y="205" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="bold">✓</text>
+  <rect x="201" y="191" width="30" height="20" fill="#dcfce7" rx="5"/>
+  <text x="218" y="205" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="bold">✓</text>
+  <rect x="239" y="191" width="30" height="20" fill="#dcfce7" rx="5"/>
+  <text x="256" y="205" text-anchor="middle" fill="#16a34a" font-size="12" font-weight="bold">✓</text>
+
+  <!-- Family icon -->
+  <text x="310" y="230" font-size="32">👨‍👩‍👧‍👦</text>
+
+  <!-- PNL label -->
+  <rect x="85" y="230" width="80" height="22" fill="#fef3c7" rx="11"/>
+  <text x="125" y="246" text-anchor="middle" fill="#d97706" font-size="12" font-family="Inter,sans-serif" font-weight="700">PNL shablon</text>
+</svg>

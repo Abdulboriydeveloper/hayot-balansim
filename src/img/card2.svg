@@ -1,0 +1,32 @@
+<svg width="400" height="300" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="300" fill="#f0fdf4" rx="16"/>
+
+  <!-- Price tag shape -->
+  <path d="M130 60 L270 60 L310 145 L270 230 L130 230 L90 145 Z" fill="#fff" stroke="#bbf7d0" stroke-width="2"/>
+  
+  <!-- Big price -->
+  <text x="200" y="128" text-anchor="middle" fill="#16a34a" font-size="54" font-family="Inter, sans-serif" font-weight="900">%</text>
+  <text x="200" y="165" text-anchor="middle" fill="#15803d" font-size="18" font-family="Inter, sans-serif" font-weight="700">ENG ARZON</text>
+  <text x="200" y="187" text-anchor="middle" fill="#86efac" font-size="13" font-family="Inter, sans-serif">narx kafolati</text>
+
+  <!-- Decorative coins -->
+  <circle cx="68" cy="90" r="22" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="68" y="97" text-anchor="middle" fill="#92400e" font-size="16" font-weight="bold">$</text>
+  
+  <circle cx="332" cy="90" r="18" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="332" y="97" text-anchor="middle" fill="#92400e" font-size="14" font-weight="bold">$</text>
+  
+  <circle cx="55" cy="200" r="14" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="55" y="206" text-anchor="middle" fill="#92400e" font-size="11" font-weight="bold">$</text>
+  
+  <circle cx="345" cy="195" r="20" fill="#fbbf24" stroke="#f59e0b" stroke-width="2"/>
+  <text x="345" y="202" text-anchor="middle" fill="#92400e" font-size="15" font-weight="bold">$</text>
+
+  <!-- Stars -->
+  <text x="152" y="88" font-size="18" fill="#fbbf24">★</text>
+  <text x="230" y="88" font-size="18" fill="#fbbf24">★</text>
+  <text x="191" y="80" font-size="14" fill="#fbbf24">★</text>
+
+  <!-- Arrow down = discount -->
+  <path d="M200 242 L215 258 L205 258 L205 270 L195 270 L195 258 L185 258 Z" fill="#16a34a" opacity="0.3"/>
+</svg>

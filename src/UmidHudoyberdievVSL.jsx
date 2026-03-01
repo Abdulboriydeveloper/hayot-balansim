@@ -6,17 +6,19 @@ import heroPerson  from "./img/umidaka.png";
 import arrowIcon   from "./img/arrow.svg";
 import card1       from "./img/card1.webp";
 import card2       from "./img/card2.webp";
-import card3       from "./img/card3.webp";
-import card4       from "./img/card4.webp";
-import card5       from "./img/card5.webp";
+import card3       from "./img/card3.svg";
+import card4       from "./img/card4.svg";
+import card5       from "./img/card5.svg";
+import card6       from "./img/card5.webp";
 import authorPhoto from "./img/umidaka2.webp";
 
 const CREDS = [
-  { t: "Eslab qolish bo'yicha Rossiya rekordchisi", gold: false },
-  { t: "O'zbekiston Mnemosport Federatsiyasi Prezidenti", gold: true },
-  { t: "Miyani va xotirani rivojlantirish bo'yicha xalqaro ekspert", gold: false },
-  { t: "Shaxsiy rivojlanish bo'yicha mentor", gold: true },
-  { t: "4 yil ichida 34,000+ tadan ortiq o'quvchilarimga shaxsiy rivojlanishga yordam bergan", gold: false },
+  { t: "Hayotni moliyaviy rejalash bo’yicha Yaponiyada tajriba orttirgan", gold: false },
+  { t: "Islomiy moliya bo’yicha Birlashgan Arab Amirliklarida tajriba orttirgan", gold: true },
+  { t: "1000dan ortiq insonlarga shaxsiy va islomiy moliya bo’yicha dars bergan", gold: false },
+  { t: "Chet davlatlar bilan bir nechta qo’shma korxonalar asoschisi", gold: true },
+  { t: "Mahalliy sug’urta bozoriga 5mln$ investitsiya jalb qilgan", gold: false },
+  { t: "Moliya va pulni to’g’ri boshqarish sohasida 20 yildan beri yashayman", gold: true },
 ];
 
 // SODDA FUNKSIYA - xuddi shu oynada ochish
@@ -60,7 +62,7 @@ function Hero() {
           <div className="sm-insta sfu d1"><InstaBadge /></div>
           <h1 className="sm-hero-title sfu d1">HAYOT BALANSIM</h1>
           <p className="sm-hero-sub sfu d2">
-            Qanday qilib xotirangizni 10 barobarga kuchaytirish va istalgan ma'lumotlarni eslab qolish mumkin?
+            Qanday qilib qisqa vaqt ichida barcha qarzlarni yopib, hotirjam hayot balansiga ega bo’lish mumkin?
           </p>
           <button className="sm-btn sfu d3" onClick={goToForm}>
             Ro'yxatdan o'tish
@@ -86,11 +88,12 @@ function Benefits() {
         <div className="sm-row3">
           <div className="sm-card"><div className="sm-card-imgbox"><img src={card1} alt="Kurs dasturi" /></div><div className="sm-card-body"><p><strong>Kurs dasturi</strong><br />va batafsil ma'lumotlar</p></div></div>
           <div className="sm-card"><div className="sm-card-imgbox"><img src={card2} alt="Eng arzon narxda" /></div><div className="sm-card-body"><p><strong>Eng arzon narxda</strong><br />kursga qo'shilish</p></div></div>
-          <div className="sm-card"><div className="sm-card-imgbox"><img src={card3} alt="Xotirani rivojlantirish" /></div><div className="sm-card-body"><p><strong>Xotirani rivojlantirish</strong> uchun bepul qo'llanma va materiallar</p></div></div>
+          <div className="sm-card"><div className="sm-card-imgbox"><img src={card3} alt="Xotirani rivojlantirish" /></div><div className="sm-card-body"><p><strong>1 oylik oilaviy </strong>PNL shabloni</p></div></div>
         </div>
-        <div className="sm-row2">
-          <div className="sm-card"><div className="sm-card-imgbox tall"><img src={card4} alt="7 qadamlik reja" /></div><div className="sm-card-body"><p>Superxotiraga ega bo'lish uchun <strong>7 qadamlik</strong> to'liq reja</p></div></div>
-          <div className="sm-card red"><div className="sm-card-imgbox tall"><img src={card5} alt="Sirli bonuslar" /></div><div className="sm-card-body"><p>Hech qayerda berilmagan<br /><strong>sirli bonuslar</strong> (sizga yoqishi aniq)</p></div></div>
+        <div className="sm-row3">
+          <div className="sm-card"><div className="sm-card-imgbox tall"><img src={card4} alt="7 qadamlik reja" /></div><div className="sm-card-body"><p>Investitsiya qilish mumkin bo’gan  <strong>50 ta </strong>yo’nalish</p></div></div>
+          <div className="sm-card"><div className="sm-card-imgbox tall"><img src={card5} alt="Sirli bonuslar" /></div><div className="sm-card-body"><p><strong>Islomiy moliya</strong> <br /> bo’yicha maxsus darslar</p></div></div>
+          <div className="sm-card red"><div className="sm-card-imgbox"><img src={card6} alt="Eng arzon narxda" /></div><div className="sm-card-body"><p>Hech qayerda berilmagan <br /> <strong> BONUSLAR </strong>(sizga yoqishi aniq)</p></div></div>
         </div>
         <div className="sm-bcta">
           <button className="sm-btn" onClick={goToForm}>Ro'yxatdan o'tish</button>
@@ -129,11 +132,11 @@ function Footer() {
   return (
     <footer className="sm-footer">
       <p className="sm-footer-name">Umidjon Hudoyberdiev</p>
-      <p className="sm-footer-phone"><a href="tel:998781139090">+998 78 113 90 90</a></p>
+      <p className="sm-footer-phone"><a href="tel:998781139090">+998 91 140 24 40</a></p>
       <div className="sm-footer-legal">
-        <p>"HAYOT BALANSIM" MCHJ</p>
+        {/* <p>"HAYOT BALANSIM" MCHJ</p>
         <p>Bog'ishamol MFY, Amir Temur shoh ko'chasi</p>
-        <p>Hisob raqam: 20208000005742456001 Bank: Anorbank AJ INN:311052855 MFO:01183</p>
+        <p>Hisob raqam: 20208000005742456001 Bank: Anorbank AJ INN:311052855 MFO:01183</p> */}
         <br />
         <p>This site or product is not part of or endorsed by Facebook, Google, or any social media platform in any way. FACEBOOK is a trademark of META PLATFORMS, Inc. YOUTUBE and GOOGLE are trademarks of ALPHABET, Inc.</p>
       </div>
