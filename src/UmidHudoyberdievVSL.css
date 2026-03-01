@@ -415,7 +415,7 @@ iframe.amoforms_iframe {
 @media (max-width: 640px) {
   .sm-hero         { min-height: auto; }
   .sm-hero-inner   { flex-direction: column; align-items: center; min-height: auto; padding-bottom: 80px; }
-  .sm-hero-person  { flex: none; width: 100%; justify-content: center; order: 2; }
+  .sm-hero-person  { flex: none; width: 70%; justify-content: center; order: 2; }
   .sm-hero-person img { width: 85%; max-width: 360px; max-height: 320px; }
   .sm-hero-text    { flex: none; width: 100%; order: 1; padding: 48px 24px 24px; }
   .sm-hero-sub     { font-size: 16px; }
