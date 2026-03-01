@@ -132,7 +132,7 @@ function Footer() {
   return (
     <footer className="sm-footer">
       <p className="sm-footer-name">Umidjon Hudoyberdiev</p>
-      <p className="sm-footer-phone"><a href="tel:998781139090">+998 91 140 24 40</a></p>
+      <p className="sm-footer-phone"><a href="tel:998781139090">+998 90 851 08 40</a></p>
       <div className="sm-footer-legal">
         {/* <p>"HAYOT BALANSIM" MCHJ</p>
         <p>Bog'ishamol MFY, Amir Temur shoh ko'chasi</p>
