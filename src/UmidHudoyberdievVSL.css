@@ -446,9 +446,9 @@ iframe.amoforms_iframe {
 
 @media (max-width: 480px) {
   .sm-hero-person { width: 80%; }
-  .sm-hero-person img { max-width: 280px; max-height: 260px; }
+  .sm-hero-person img { max-width: 280px; max-height: 360px; }
   .sm-hero-text { padding: 30px 16px 16px; }
-  .sm-hero-title { font-size: 38px; }
+  .sm-hero-title { font-size: 40px; }
   .sm-hero-sub { font-size: 14px; }
   .sm-sec-title { font-size: 30px; }
   .sm-btn { height: 56px; font-size: 15px; border-radius: 16px; }
