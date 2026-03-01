@@ -5,26 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HAYOT BALANSIM - oldindan ro'yxatdan o'tish</title>
     <meta name="description" content="Qanday qilib qisqa vaqt ichida barcha qarzlarni yopib, hotirjam hayot balansiga ega bo'lish mumkin?" />
+    <meta name="keywords" content="hayot balansi, moliyaviy erkinlik, qarzlardan qutulish, islomiy moliya, investitsiya" />
+    <meta name="author" content="Umidjon Hudoyberdiev" />
+    <meta name="robots" content="index, follow" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hayot-balansim.vercel.app/" />
+    <meta property="og:title" content="HAYOT BALANSIM - oldindan ro'yxatdan o'tish" />
+    <meta property="og:description" content="Qanday qilib qisqa vaqt ichida barcha qarzlarni yopib, hotirjam hayot balansiga ega bo'lish mumkin?" />
+    <meta property="og:image" content="https://hayot-balansim.vercel.app/og-image.jpg" />
 
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://hayot-balansim.vercel.app/" />
+    <meta property="twitter:title" content="HAYOT BALANSIM - oldindan ro'yxatdan o'tish" />
+    <meta property="twitter:description" content="Qanday qilib qisqa vaqt ichida barcha qarzlarni yopib, hotirjam hayot balansiga ega bo'lish mumkin?" />
+    <meta property="twitter:image" content="https://hayot-balansim.vercel.app/og-image.jpg" />
+
+    <!-- Preload Critical Assets -->
+    <link rel="preload" as="image" href="/src/img/umidaka.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/src/img/hero-bg.webp" fetchpriority="high" />
+    
     <!-- Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://forms.amocrm.ru" />
 
-    <!-- Google Fonts — NON-BLOCKING -->
+    <!-- Critical CSS - inline for faster rendering -->
+    <style>
+      /* CRITICAL CSS - faqat hero section uchun */
+      *{margin:0;padding:0;box-sizing:border-box}html,body{font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:#000;color:#fff;overflow-x:hidden}.sm-hero{position:relative;overflow:hidden;background:#0c0700;height:750px}.sm-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;height:750px}.sm-hero-inner{position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;display:flex;align-items:stretch;height:750px}.sm-hero-person{flex:0 0 48%;display:flex;align-items:flex-end;justify-content:flex-start}.sm-hero-person img{display:block;width:100%;max-width:520px;height:650px;object-fit:contain;object-position:bottom right}.sm-hero-text{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;padding:40px 48px 100px 16px}.sm-hero-title{font-size:90px;font-weight:900;color:#fff;line-height:1;letter-spacing:2px;margin-bottom:20px;text-transform:uppercase;text-shadow:0 0 60px rgba(180,100,10,0.35)}@media (max-width:640px){.sm-hero{height:auto}.sm-hero-inner{flex-direction:column;padding-bottom:80px}.sm-hero-person{width:70%;order:2}.sm-hero-person img{max-width:360px;max-height:320px}.sm-hero-text{order:1;padding:48px 24px 24px}.sm-hero-title{font-size:48px}}@media (max-width:480px){.sm-hero-title{font-size:38px}}
+    </style>
+
+    <!-- Full CSS (non-blocking) -->
+    <link rel="preload" href="/src/UmidHudoyberdievVSL.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="/src/UmidHudoyberdievVSL.css" /></noscript>
+
+    <!-- Google Fonts (non-blocking) -->
     <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap"
       media="print" onload="this.media='all'" />
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap" />
     </noscript>
-
-    <!-- System font fallback — no FOIT -->
-    <style>
-      html { font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
-    </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <script type="module" src="/src/main.jsx" defer></script>
   </body>
 </html>
