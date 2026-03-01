@@ -18,7 +18,7 @@ const CREDS = [
   { t: "1000dan ortiq insonlarga shaxsiy va islomiy moliya bo’yicha dars bergan", gold: false },
   { t: "Chet davlatlar bilan bir nechta qo’shma korxonalar asoschisi", gold: true },
   { t: "Mahalliy sug’urta bozoriga 5mln$ investitsiya jalb qilgan", gold: false },
-  { t: "Moliya va pulni to’g’ri boshqarish sohasida 20 yildan beri yashayman", gold: true },
+  { t: "Moliya va pulni to’g’ri boshqarish sohasida 20 yildan beri yashaydi", gold: true },
 ];
 
 // SODDA FUNKSIYA - xuddi shu oynada ochish
