@@ -21,7 +21,7 @@ const CREDS = [
 ];
 
 function goToForm() {
-  window.location.href = "https://forms.amocrm.ru/rczcdxl";
+  window.location.href = "https://forms.amocrm.ru/rzrlwrd";
 }
 
 function InstaBadge() {
