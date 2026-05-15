@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "./UmidHudoyberdievVSL.css";
 
 import heroBg      from "./img/hero-bg.webp";
@@ -21,13 +22,13 @@ const CREDS = [
 ];
 
 function goToForm() {
-  window.location.href = "https://forms.amocrm.ru/rzrlwrd";
+  window.location.href = "/registration";
 }
 
 function InstaBadge() {
   return (
-    <a
-      href="https://www.instagram.com/umid_hudoyberdiev"
+    
+      <a href="https://www.instagram.com/umid_hudoyberdiev"
       target="_blank"
       rel="noopener noreferrer"
       className="sm-insta-badge"
@@ -57,15 +58,12 @@ function CtaLink({ onClick }) {
 function Hero() {
   return (
     <section className="sm-hero">
-      {/* Background — CSS orqali, LCP uchun */}
       <div
         className="sm-hero-bg"
         style={{ backgroundImage: `url(${heroBg})` }}
         role="presentation"
       />
-
       <div className="sm-hero-inner">
-        {/* Rasm — LCP element, fetchpriority=high */}
         <div className="sm-hero-person">
           <img
             src={heroPerson}
@@ -76,7 +74,6 @@ function Hero() {
             height="650"
           />
         </div>
-
         <div className="sm-hero-text">
           <div className="sm-insta sfu d1"><InstaBadge /></div>
           <h1 className="sm-hero-title sfu d1">HAYOT BALANSIM</h1>
@@ -92,7 +89,6 @@ function Hero() {
           </div>
         </div>
       </div>
-
       <div className="sm-sec-title-wrap">
         <p className="sm-sec-title">
           Ro'yxatdan o'tish orqali{" "}
@@ -201,6 +197,51 @@ function Footer() {
 }
 
 export default function UmidHudoyberdievVSL() {
+  useEffect(() => {
+    // Meta Pixel Code
+    (function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod
+          ? n.callMethod.apply(n, arguments)
+          : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = true;
+      n.version = "2.0";
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = true;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s);
+    })(
+      window,
+      document,
+      "script",
+      "https://connect.facebook.net/en_US/fbevents.js"
+    );
+
+    window.fbq("init", "1536981658027062");
+    window.fbq("track", "PageView");
+
+    // Noscript fallback
+    const noscript = document.createElement("noscript");
+    const img = document.createElement("img");
+    img.height = 1;
+    img.width = 1;
+    img.style.display = "none";
+    img.src =
+      "https://www.facebook.com/tr?id=1536981658027062&ev=PageView&noscript=1";
+    noscript.appendChild(img);
+    document.body.appendChild(noscript);
+
+    return () => {
+      document.body.removeChild(noscript);
+    };
+  }, []);
+
   return (
     <>
       <Hero />

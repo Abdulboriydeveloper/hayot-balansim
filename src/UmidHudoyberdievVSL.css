@@ -97,6 +97,70 @@ iframe.amoforms_iframe {
 }
 
 /* ══════════════════════════════════
+   REGISTRATION PAGE
+══════════════════════════════════ */
+.registration-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(250, 192, 106, 0.16), transparent 32%),
+    linear-gradient(180deg, #120b03 0%, #000 52%);
+  color: #fff;
+  padding: 32px 20px 48px;
+}
+
+.registration-shell {
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+
+.registration-heading {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.registration-back {
+  width: max-content;
+  color: rgba(255,255,255,.78);
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+
+.registration-back:hover { color: #fac06a; }
+
+.registration-kicker {
+  color: #fac06a;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.registration-heading h1 {
+  font-size: clamp(34px, 7vw, 64px);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.registration-form-wrap {
+  overflow: hidden;
+  min-height: 680px;
+  background: #fff;
+  border: 1px solid rgba(250, 192, 106, 0.35);
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(0,0,0,.45);
+}
+
+.registration-form {
+  display: block;
+  width: 100%;
+  height: 680px;
+  border: 0;
+  background: #fff;
+}
+
+/* ══════════════════════════════════
    HERO - OPTIMIZED
 ══════════════════════════════════ */
 .sm-hero {
@@ -442,6 +506,10 @@ iframe.amoforms_iframe {
   .sm-cred { font-size: 14px; padding: 12px 20px; }
   
   .sm-footer { padding: 24px 16px 32px; }
+
+  .registration-page { padding: 20px 12px 32px; }
+  .registration-form-wrap { min-height: 720px; border-radius: 12px; }
+  .registration-form { height: 720px; }
 }
 
 @media (max-width: 480px) {
