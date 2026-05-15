@@ -27,7 +27,7 @@ function goToForm() {
 function InstaBadge() {
   return (
     <a
-      href="https://www.instagram.com/umidhudoyberdiev"
+      href="https://www.instagram.com/umid_hudoyberdiev"
       target="_blank"
       rel="noopener noreferrer"
       className="sm-insta-badge"
