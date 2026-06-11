@@ -182,7 +182,7 @@ function Footer() {
     <footer className="sm-footer">
       <p className="sm-footer-name">Umidjon Hudoyberdiev</p>
       <p className="sm-footer-phone">
-        <a href="tel:+998957007731">+998 95 700 77 31</a>
+        <a href="tel:+998957007731">+998 77 741 30 14</a>
       </p>
       <div className="sm-footer-legal">
         <p>
